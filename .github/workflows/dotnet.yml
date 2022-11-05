@@ -24,10 +24,6 @@ jobs:
         npm test
         npm run build
       working-directory: web
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v2
-      with:
-        dotnet-version: 6.0.x
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
