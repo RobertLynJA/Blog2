@@ -1,9 +1,10 @@
-name: Deploy
-concurrency: production
+name: Deploy-To-Prod
+concurrency: deploy-production
 
 on:
   push:
-    branches: [ "release**" ]
+    branches:
+      - "release**"
 
 jobs:
   build:
@@ -40,11 +41,24 @@ jobs:
         name: website
         path: ./release/**
         if-no-files-found: error
+  
+  deploy_production:
+  
+    needs: build
+    runs-on: [ self-hosted, Production ]
+    environment: Production
+    
+    steps:
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: website
+        path: website
     - name: Take app offline
       run: |
-        Copy-Item ./app_offline.htm C:/websites/robertlynja -Force
+        Copy-Item ./website/wwwroot/app_offline.htm C:/websites/robertlynja -Force
         Start-Sleep -Seconds 30
     - name: Deploy
-      run: Copy-Item ./release/* C:/websites/robertlynja -Recurse -Force
+      run: Copy-Item ./website/* C:/websites/robertlynja -Recurse -Force
     - name: Remove app offline        
       run: Remove-Item C:/websites/robertlynja/app_offline.htm
