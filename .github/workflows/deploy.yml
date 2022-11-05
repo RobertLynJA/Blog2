@@ -43,14 +43,6 @@ jobs:
         name: website
         path: ./release/**
         if-no-files-found: error
-    - name: Take app offline
-      run: |
-        Copy-Item ./app_offline.htm C:/websites/robertlynja -Force
-        Start-Sleep -Seconds 30
-    - name: Deploy
-      run: Copy-Item ./release/* C:/websites/robertlynja -Recurse -Force
-    - name: Remove app offline        
-      run: Remove-Item C:/websites/robertlynja/app_offline.htm
     
   deploy_development:
   
