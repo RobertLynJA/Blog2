@@ -38,5 +38,5 @@ jobs:
         dotnet publish ./api/API.csproj  -c Release -o ./release
         Copy-Item ./web/build ./release/wwwroot -Recurse -Force
         Start-Sleep -Seconds 30
-        Copy-Item ./release C:/websites/robertlynja -Recurse -Force
+        Copy-Item ./release/* C:/websites/robertlynja -Recurse -Force
         Remove-Item C:/websites/robertlynja/app_offline.htm
