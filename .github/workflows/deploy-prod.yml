@@ -54,6 +54,12 @@ jobs:
       with:
         name: website
         path: website
+    - name: Add secrets 
+      uses: microsoft/variable-substitution@v1 
+      with:
+        files: './website/appsettings.json'
+      env:
+        ConnectionStrings.DefaultConnection: ${{ secrets.SQL_CONNECTION_STRING }}
     - name: Take app offline
       run: |
         Copy-Item ./website/wwwroot/app_offline.htm C:/websites/robertlynja -Force
