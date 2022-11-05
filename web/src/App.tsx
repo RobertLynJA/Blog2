@@ -10,14 +10,15 @@ function App() {
         <p>
           Default React site, updates coming soon.
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <p> Deployed automatically from 
+          <a
+            className="App-link"
+            href="https://github.com/RobertLynJA/Blog2"
+            target="_blank"
+            >
+            Github
+          </a>
+        </p>
       </header>
     </div>
   );
