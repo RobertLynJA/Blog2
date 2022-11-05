@@ -1,0 +1,39 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: self-hosted
+  
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: BuildUI
+      run: |
+        npm install
+        npm test
+        npm run build
+      working-directory: web
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test
+      run: |
+        dotnet test --no-build --verbosity normal DataFacade.Tests/DataFacade.Tests.csproj
+        dotnet test --no-build --verbosity normal API.Tests/API.Tests.csproj
+    - name: Publish
+      run: |
+        Copy-Item ./app_offline.htm C:/websites/robertlynja -Force
+        dotnet publish ./api/API.csproj  -c Release -o ./release
+        Copy-Item ./web/build ./release/wwwroot -Recurse -Force
+        Start-Sleep -Seconds 30
+        Copy-Item ./release/* C:/websites/robertlynja -Recurse -Force
+        Remove-Item C:/websites/robertlynja/app_offline.htm
