@@ -1,9 +1,9 @@
 name: Deploy
-concurrency: production
+concurrency: deployment
 
 on:
   push:
-    branches: [ "release**" ]
+    branches: [ "release**", "main", "MultipleDevelopment" ]
 
 jobs:
   build:
@@ -46,5 +46,45 @@ jobs:
         Start-Sleep -Seconds 30
     - name: Deploy
       run: Copy-Item ./release/* C:/websites/robertlynja -Recurse -Force
+    - name: Remove app offline        
+      run: Remove-Item C:/websites/robertlynja/app_offline.htm
+    
+  deploy_development:
+  
+    needs: build
+    runs-on: [ self-hosted, Development ]
+    
+    steps:
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: website
+        path: website
+    - name: Take app offline
+      run: |
+        Copy-Item ./website/wwwroot/app_offline.htm C:/websites/robertlynja -Force
+        Start-Sleep -Seconds 30
+    - name: Deploy
+      run: Copy-Item ./website/* C:/websites/robertlynja -Recurse -Force
+    - name: Remove app offline        
+      run: Remove-Item C:/websites/robertlynja/app_offline.htm
+  
+  deploy_production:
+  
+    needs: build
+    runs-on: [ self-hosted, Production ]
+    
+    steps:
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: website
+        path: website
+    - name: Take app offline
+      run: |
+        Copy-Item ./website/wwwroot/app_offline.htm C:/websites/robertlynja -Force
+        Start-Sleep -Seconds 30
+    - name: Deploy
+      run: Copy-Item ./website/* C:/websites/robertlynja -Recurse -Force
     - name: Remove app offline        
       run: Remove-Item C:/websites/robertlynja/app_offline.htm
