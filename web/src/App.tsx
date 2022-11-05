@@ -10,10 +10,8 @@ function App() {
         <p>
           Default React site, updates coming soon.
         </p>
-        <p> Deployed automatically from 
-          <a className="App-link" href="https://github.com/RobertLynJA/Blog2">
-            Github
-          </a>
+        <p>
+          Deployed automatically from <a className="App-link" href="https://github.com/RobertLynJA/Blog2">Github</a>
         </p>
       </header>
     </div>
