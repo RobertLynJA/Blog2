@@ -20,9 +20,10 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: BuildUI
       run: |
-        npm install --prefix web
-        npm test --prefix web
-        npm run build --prefix web        
+        npm install
+        npm test
+        npm run build
+      working-directory: web
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
       with:
