@@ -36,6 +36,12 @@ jobs:
       run: |
         dotnet publish ./api/API.csproj  -c Release -o ./release
         Copy-Item ./web/build ./release/wwwroot -Recurse -Force
+    - name: Add secrets 
+      uses: microsoft/variable-substitution@v1 
+      with:
+        files: 'employee.json'
+      env:
+        ConnectionStrings.DefaultConnection: ${{ secrets.SQL_CONNECTION_STRING }}
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3
       with:
