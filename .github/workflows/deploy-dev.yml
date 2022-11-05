@@ -1,0 +1,67 @@
+name: Deploy
+concurrency: deploy-development
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "main"
+      - "MultipleDeployment"
+
+jobs:
+  build:
+
+    runs-on: self-hosted
+  
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: BuildUI
+      run: |
+        npm install
+        npm test
+        npm run build
+      working-directory: web
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test
+      run: |
+        dotnet test --no-build --verbosity normal DataFacade.Tests/DataFacade.Tests.csproj
+        dotnet test --no-build --verbosity normal API.Tests/API.Tests.csproj
+    - name: Publish
+      run: |
+        dotnet publish ./api/API.csproj  -c Release -o ./release
+        Copy-Item ./web/build ./release/wwwroot -Recurse -Force
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: website
+        path: ./release/**
+        if-no-files-found: error
+    
+  deploy_development:
+  
+    needs: build
+    runs-on: [ self-hosted, Development ]
+    environment: Development
+    
+    steps:
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: website
+        path: website
+    - name: Take app offline
+      run: |
+        Copy-Item ./website/wwwroot/app_offline.htm C:/websites/robertlynja -Force
+        Start-Sleep -Seconds 30
+    - name: Deploy
+      run: Copy-Item ./website/* C:/websites/robertlynja -Recurse -Force
+    - name: Remove app offline        
+      run: Remove-Item C:/websites/robertlynja/app_offline.htm
+      
