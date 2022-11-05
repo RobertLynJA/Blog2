@@ -1,0 +1,37 @@
+name: .NET
+
+on:
+  push
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+  
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: BuildUI
+      run: |
+        npm install --prefix web
+        npm test --prefix web
+        npm run build --prefix web        
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test
+      run: |
+        dotnet test --no-build --verbosity normal DataFacade.Tests/DataFacade.Tests.csproj
+        dotnet test --no-build --verbosity normal API.Tests/API.Tests.csproj
