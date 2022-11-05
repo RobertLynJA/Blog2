@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy-To-Dev
 concurrency: deploy-development
 
 on:
@@ -6,7 +6,6 @@ on:
   push:
     branches:
       - "main"
-      - "MultipleDeployment"
 
 jobs:
   build:
