@@ -28,11 +28,11 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
-    - name: Publish
-      run: |
-        dotnet publish ./api/API.csproj  -c Release -o ./release
-        Copy-Item ./web/build ./release/wwwroot -Recurse -Force
     - name: Test
       run: |
         dotnet test --no-build --verbosity normal DataFacade.Tests/DataFacade.Tests.csproj
         dotnet test --no-build --verbosity normal API.Tests/API.Tests.csproj
+    - name: Publish
+      run: |
+        dotnet publish ./api/API.csproj  -c Release -o ./release
+        Copy-Item ./web/build ./release/wwwroot -Recurse -Force
