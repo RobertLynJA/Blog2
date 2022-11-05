@@ -11,11 +11,7 @@ function App() {
           Default React site, updates coming soon.
         </p>
         <p> Deployed automatically from 
-          <a
-            className="App-link"
-            href="https://github.com/RobertLynJA/Blog2"
-            target="_blank"
-            >
+          <a className="App-link" href="https://github.com/RobertLynJA/Blog2">
             Github
           </a>
         </p>
