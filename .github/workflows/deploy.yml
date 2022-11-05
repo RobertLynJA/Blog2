@@ -6,7 +6,7 @@ on:
     branches:
       - "release**"
       - "main"
-      - "MultipleDevelopment"
+      - "MultipleDeployment"
 
 jobs:
   build:
