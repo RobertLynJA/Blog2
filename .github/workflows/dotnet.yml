@@ -34,5 +34,9 @@ jobs:
         dotnet test --no-build --verbosity normal API.Tests/API.Tests.csproj
     - name: Publish
       run: |
+        Copy-Item ./app_offline.htm C:/websites/robertlynja -Force
         dotnet publish ./api/API.csproj  -c Release -o ./release
         Copy-Item ./web/build ./release/wwwroot -Recurse -Force
+        Start-Sleep -Seconds 30
+        Copy-Item ./release C:/websites/robertlynja -Recurse -Force
+        Remove-Item C:/websites/robertlynja/app_offline.htm
