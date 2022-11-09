@@ -10,7 +10,7 @@ on:
 jobs:
   build:
 
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
   
     strategy:
       matrix:
@@ -18,12 +18,19 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
     - name: BuildUI
       run: |
-        npm install
-        npm test
-        npm run build
-      working-directory: web
+        npm install --prefix web
+        npm test --prefix web
+        npm run build --prefix web        
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 6.0.x
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
@@ -42,7 +49,7 @@ jobs:
         name: website
         path: ./release/**
         if-no-files-found: error
-    
+            
   deploy_development:
   
     needs: build
