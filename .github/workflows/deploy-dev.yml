@@ -41,13 +41,18 @@ jobs:
         dotnet test --no-build --verbosity normal API.Tests/API.Tests.csproj
     - name: Publish
       run: |
-        dotnet publish ./API/API.csproj  -c Release -o ./release
-        Copy-Item ./web/build ./release/wwwroot -Recurse -Force
-    - name: Upload a Build Artifact
+        dotnet publish ./API/API.csproj  -c Release -o ./release        
+    - name: Upload a Build Artifact (.Net)
       uses: actions/upload-artifact@v3
       with:
         name: website
         path: ./release/**
+        if-no-files-found: error
+    - name: Upload a Build Artifact (React)
+      uses: actions/upload-artifact@v3
+      with:
+        name: react
+        path: ./web/build/**
         if-no-files-found: error
             
   deploy_development:
@@ -57,11 +62,16 @@ jobs:
     environment: Development
     
     steps:
-    - name: Download a Build Artifact
+    - name: Download a Build Artifact (.Net)
       uses: actions/download-artifact@v3
       with:
         name: website
         path: website
+    - name: Download a Build Artifact (React)
+      uses: actions/download-artifact@v3
+      with:
+        name: react
+        path: website/wwwroot        
     - name: Add secrets 
       uses: microsoft/variable-substitution@v1 
       with:
