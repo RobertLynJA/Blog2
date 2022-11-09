@@ -58,7 +58,7 @@ jobs:
   
     needs: build
     runs-on: [ self-hosted, Production ]
-    environment: Development
+    environment: Production
     
     steps:
     - name: Download a Build Artifact (.Net)
