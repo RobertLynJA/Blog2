@@ -41,7 +41,7 @@ jobs:
         dotnet test --no-build --verbosity normal API.Tests/API.Tests.csproj
     - name: Publish
       run: |
-        dotnet publish ./api/API.csproj  -c Release -o ./release
+        dotnet publish ./API/API.csproj  -c Release -o ./release
         Copy-Item ./web/build ./release/wwwroot -Recurse -Force
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3
