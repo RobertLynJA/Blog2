@@ -55,7 +55,7 @@ jobs:
         path: ./web/build/**
         if-no-files-found: error
             
-  deploy_development:
+  deploy:
   
     needs: build
     runs-on: [ self-hosted, Development ]
