@@ -9,7 +9,7 @@ on:
 jobs:
   build:
 
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
   
     strategy:
       matrix:
@@ -17,12 +17,19 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
     - name: BuildUI
       run: |
-        npm install
-        npm test
-        npm run build
-      working-directory: web
+        npm install --prefix web
+        npm test --prefix web
+        npm run build --prefix web        
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 6.0.x
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
@@ -33,27 +40,37 @@ jobs:
         dotnet test --no-build --verbosity normal API.Tests/API.Tests.csproj
     - name: Publish
       run: |
-        dotnet publish ./api/API.csproj  -c Release -o ./release
-        Copy-Item ./web/build ./release/wwwroot -Recurse -Force
-    - name: Upload a Build Artifact
+        dotnet publish ./API/API.csproj  -c Release -o ./release        
+    - name: Upload a Build Artifact (.Net)
       uses: actions/upload-artifact@v3
       with:
         name: website
         path: ./release/**
         if-no-files-found: error
-  
-  deploy_production:
+    - name: Upload a Build Artifact (React)
+      uses: actions/upload-artifact@v3
+      with:
+        name: react
+        path: ./web/build/**
+        if-no-files-found: error
+            
+  deploy_development:
   
     needs: build
-    runs-on: [ self-hosted, Production ]
-    environment: Production
+    runs-on: [ self-hosted, Development ]
+    environment: Development
     
     steps:
-    - name: Download a Build Artifact
+    - name: Download a Build Artifact (.Net)
       uses: actions/download-artifact@v3
       with:
         name: website
         path: website
+    - name: Download a Build Artifact (React)
+      uses: actions/download-artifact@v3
+      with:
+        name: react
+        path: website/wwwroot        
     - name: Add secrets 
       uses: microsoft/variable-substitution@v1 
       with:
