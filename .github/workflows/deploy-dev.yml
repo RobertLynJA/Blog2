@@ -72,7 +72,11 @@ jobs:
     environment: Development
     env:
       deploy-folder: c:/websites/robertlynja
-    
+      
+    defaults:
+      run:
+        shell: powershell
+
     steps:
     - name: Download a Build Artifact (.Net)
       uses: actions/download-artifact@v3
