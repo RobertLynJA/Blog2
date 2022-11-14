@@ -59,7 +59,9 @@ jobs:
     needs: build
     runs-on: [ self-hosted, Production ]
     environment: Production
-    
+    env:
+      deploy-folder: c:/websites/robertlynja
+      
     steps:
     - name: Download a Build Artifact (.Net)
       uses: actions/download-artifact@v3
@@ -79,9 +81,12 @@ jobs:
         ConnectionStrings.DefaultConnection: ${{ secrets.SQL_CONNECTION_STRING }}
     - name: Take app offline
       run: |
-        Copy-Item ./website/wwwroot/app_offline.htm C:/websites/robertlynja -Force
+        Remove-Item ${{ env.deploy-folder }}/* -Include app_offline.htm -Recurse
+        Move-Item ./website/wwwroot/app_offline.htm ${{ env.deploy-folder }} -Force
         Start-Sleep -Seconds 30
+    - name: Delete Existing files
+      run:  Remove-Item ${{ env.deploy-folder }}/* -Exclude app_offline.htm -Recurse
     - name: Deploy
-      run: Copy-Item ./website/* C:/websites/robertlynja -Recurse -Force
+      run: Copy-Item ./website/* ${{ env.deploy-folder }} -Recurse -Force
     - name: Remove app offline        
-      run: Remove-Item C:/websites/robertlynja/app_offline.htm
+      run: Remove-Item ${{ env.deploy-folder }}/app_offline.htm
