@@ -82,6 +82,8 @@ jobs:
       run: |
         Copy-Item ./website/wwwroot/app_offline.htm C:/websites/robertlynja -Force
         Start-Sleep -Seconds 30
+    - name: Delete Existing files
+      run: Get-ChildItem C:/websites/robertlynja/* -Exclude app_offline.htm -Recurse | Remove-Item
     - name: Deploy
       run: Copy-Item ./website/* C:/websites/robertlynja -Recurse -Force
     - name: Remove app offline        
