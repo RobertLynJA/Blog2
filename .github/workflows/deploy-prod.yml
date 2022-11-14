@@ -2,6 +2,7 @@ name: Deploy-To-Prod
 concurrency: deploy-production
 
 on:
+
   push:
     branches:
       - "release**"
@@ -30,6 +31,7 @@ jobs:
         # npm cache files are stored in `~/.npm` on Linux/macOS
         path: ~/.npm
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        
     - name: BuildUI
       run: |
         npm install --prefix web
@@ -70,6 +72,10 @@ jobs:
     environment: Production
     env:
       deploy-folder: c:/websites/robertlynja
+      
+    defaults:
+      run:
+        shell: powershell
       
     steps:
     - name: Download a Build Artifact (.Net)
