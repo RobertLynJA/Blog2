@@ -82,6 +82,7 @@ jobs:
         ConnectionStrings.DefaultConnection: ${{ secrets.SQL_CONNECTION_STRING }}
     - name: Take app offline
       run: |
+        Remove-Item ${{ env.deploy-folder }}/* -Include app_offline.htm -Recurse
         Move-Item ./website/wwwroot/app_offline.htm ${{ env.deploy-folder }} -Force
         Start-Sleep -Seconds 30
     - name: Delete Existing files
