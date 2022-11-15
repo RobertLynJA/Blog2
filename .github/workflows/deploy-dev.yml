@@ -98,7 +98,7 @@ jobs:
       run: |
         Remove-Item ${{ env.deploy-folder }}/* -Include app_offline.htm -Recurse
         Move-Item ./website/wwwroot/app_offline.htm ${{ env.deploy-folder }} -Force
-        Start-Sleep -Seconds 30
+        Start-Sleep -Seconds 90
     - name: Delete Existing files
       run:  Remove-Item ${{ env.deploy-folder }}/* -Exclude app_offline.htm -Recurse
     - name: Deploy
