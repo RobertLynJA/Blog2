@@ -1,5 +1,5 @@
-name: Deploy-To-Prod
-concurrency: deploy-production
+name: Deploy-To-Azure
+concurrency: deploy-production-az
 
 on:
 
