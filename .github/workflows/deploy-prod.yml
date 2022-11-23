@@ -5,7 +5,7 @@ on:
 
   push:
     branches:
-      - "release**"
+      - "main"
 
 jobs:
   build:
@@ -69,7 +69,9 @@ jobs:
   
     needs: build
     runs-on: [ self-hosted, Production ]
-    environment: Production
+    environment:
+      name: Production
+      url: https://robertlynja.com
     env:
       deploy-folder: c:/websites/robertlynja
       
