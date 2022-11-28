@@ -87,7 +87,7 @@ jobs:
         name: react
         path: website/wwwroot        
     - name: Add secrets 
-      uses: robertlynja/variable-substitution@v1.01
+      uses: robertlynja/variable-substitution@v1.02
       with:
         files: './website/appsettings.json'
       env:
