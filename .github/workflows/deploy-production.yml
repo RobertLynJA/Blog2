@@ -69,7 +69,9 @@ jobs:
   
     needs: build
     runs-on: windows-latest
-    environment: Production
+    environment:
+      name: Production
+      url: https://www.robertlynja.com
       
     defaults:
       run:
