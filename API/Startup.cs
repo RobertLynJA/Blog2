@@ -20,6 +20,7 @@ namespace API
             
             services.AddDbContext<DataFacade.BlogContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddApplicationInsightsTelemetry();
 
         }
 
