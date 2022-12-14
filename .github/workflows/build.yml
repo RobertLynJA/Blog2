@@ -1,8 +1,13 @@
 name: Build
+concurrency: deploy
 
-on:
+on: 
+  push:
+    branches:
+      - "main"
   pull_request:
-    branches: [ main, release** ]
+    branches:
+      - "main"
 
 jobs:
   build:
@@ -55,3 +60,56 @@ jobs:
       run: |
         dotnet test --no-build --verbosity normal DataFacade.Tests/DataFacade.Tests.csproj
         dotnet test --no-build --verbosity normal API.Tests/API.Tests.csproj
+    - name: Publish
+      run: |
+        dotnet publish ./API/API.csproj  -c Release -o ./release        
+    - name: Upload a Build Artifact (.Net)
+      uses: actions/upload-artifact@v3
+      with:
+        name: api
+        path: ./release/**
+        if-no-files-found: error
+    - name: Upload a Build Artifact (React)
+      uses: actions/upload-artifact@v3
+      with:
+        name: react
+        path: ./web/build/**
+        if-no-files-found: error
+            
+  deploy:
+  
+    needs: build
+    runs-on: windows-latest
+    if: ${{ github.event_name == 'push' }}
+    environment:
+      name: Production
+      url: https://www.robertlynja.com
+      
+    defaults:
+      run:
+        shell: powershell
+      
+    steps:
+    - name: Download a Build Artifact (.Net)
+      uses: actions/download-artifact@v3
+      with:
+        name: api
+        path: website
+    - name: Download a Build Artifact (React)
+      uses: actions/download-artifact@v3
+      with:
+        name: react
+        path: website/wwwroot        
+    - name: Add secrets 
+      uses: robertlynja/variable-substitution@v1.02
+      with:
+        files: './website/appsettings.json'
+      env:
+        ConnectionStrings.DefaultConnection: ${{ secrets.SQL_CONNECTION_STRING }}
+    # Deploy to Azure Web apps
+    - name: 'Run Azure webapp deploy action using publish profile credentials'
+      uses: azure/webapps-deploy@v2
+      with: 
+        app-name: 'RobertLynJA'
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE  }}
+        package: './website'
