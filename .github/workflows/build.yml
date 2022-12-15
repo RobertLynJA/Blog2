@@ -11,7 +11,7 @@ on:
       - "main"
 
 jobs:
-  build:
+  build-react:
 
     runs-on: ubuntu-latest
   
@@ -36,6 +36,28 @@ jobs:
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-node-        
+    - name: BuildUI
+      run: |
+        npm install --prefix web
+        npm test --prefix web
+        npm run build --prefix web        
+    - name: Upload a Build Artifact (React)
+      uses: actions/upload-artifact@v3
+      with:
+        name: react
+        path: ./web/build/**
+        if-no-files-found: error
+
+  build-dotnet:
+
+    runs-on: ubuntu-latest
+  
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+    - uses: actions/checkout@v3
     - name: Cache Nuget
       id: cache-nuget
       uses: actions/cache@v3
@@ -43,12 +65,7 @@ jobs:
         path: ~/.nuget/packages
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
         restore-keys: |
-          ${{ runner.os }}-nuget-    
-    - name: BuildUI
-      run: |
-        npm install --prefix web
-        npm test --prefix web
-        npm run build --prefix web        
+          ${{ runner.os }}-nuget-  
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
       with:
@@ -70,16 +87,10 @@ jobs:
         name: api
         path: ./release/**
         if-no-files-found: error
-    - name: Upload a Build Artifact (React)
-      uses: actions/upload-artifact@v3
-      with:
-        name: react
-        path: ./web/build/**
-        if-no-files-found: error
-            
-  deploy:
+
+  deploy-app-service:
   
-    needs: build
+    needs: [build-react, build-dotnet]
     runs-on: windows-latest
     if: ${{ github.event_name == 'push' }}
     environment:
@@ -117,7 +128,7 @@ jobs:
         
   deploy-static-app:
   
-    needs: build
+    needs: build-react
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'push' }}
     
