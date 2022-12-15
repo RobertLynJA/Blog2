@@ -90,7 +90,7 @@ jobs:
 
   deploy-app-service:
   
-    needs: [build-react, build-dotnet]
+    needs: build-dotnet
     runs-on: windows-latest
     if: ${{ github.event_name == 'push' }}
     environment:
@@ -107,11 +107,6 @@ jobs:
       with:
         name: api
         path: website
-    - name: Download a Build Artifact (React)
-      uses: actions/download-artifact@v3
-      with:
-        name: react
-        path: website/wwwroot        
     - name: Add secrets 
       uses: robertlynja/variable-substitution@v1.02
       with:
