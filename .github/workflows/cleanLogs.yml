@@ -1,0 +1,14 @@
+name: Clean Workflow Logs
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * 1"  # Runs "At 00:00 on Monday." (see https://crontab.guru)
+
+jobs:
+  clean-logs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: igorjs/gh-actions-clean-workflow@v3
+        with:
+          days_old: "14" # optional, default value: "7"
