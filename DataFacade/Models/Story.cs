@@ -11,6 +11,6 @@ namespace DataFacade.Models
         public int ID { get; set; }
         public string Title { get; set; } = null!;
         public string Content { get; set; } = null!;
-        public DateTime Publish { get; set; }
+        public DateTime PublishedDate { get; set; }
     }
 }
