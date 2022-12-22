@@ -12,12 +12,11 @@ namespace Api.Tests.Controllers
             var controller = new SiteController();
 
             //Act
-            var actionResult = controller.GetHelloMessage();
-            var contentResult = actionResult.Result as OkObjectResult;
+            var contentResult = controller.GetHelloMessage();
 
             // Assert
             Assert.NotNull(contentResult);
-            Assert.Equal("Hello, I'm working :)", contentResult.Value);
+            Assert.Equal("Hello, I'm working :)", contentResult);
         }
     }
 }
