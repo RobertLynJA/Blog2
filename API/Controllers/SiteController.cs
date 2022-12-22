@@ -8,9 +8,9 @@ namespace API.Controllers
     {
         [Route("/")]
         [HttpGet]
-        public string GetHelloMessage()
+        public ActionResult<string> GetHelloMessage()
         {
-            return "Hello, I'm working :)";
+            return Ok("Hello, I'm working :)");
         }
     }
 }

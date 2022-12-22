@@ -1,17 +1,23 @@
 ﻿using API.Controllers;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Tests.Controllers
 {
-    public class UnitTest1
+    public class SiteControllerTests
     {
         [Fact]
-        public void Test1()
+        public void SiteController_Get_ReturnsText()
         {
+            //Arrange
             var controller = new SiteController();
 
-            var result = controller.GetHelloMessage();
+            //Act
+            var actionResult = controller.GetHelloMessage();
+            var contentResult = actionResult.Result as OkObjectResult;
 
-            Assert.Equal("Hello, I'm working :)", result);
+            // Assert
+            Assert.NotNull(contentResult);
+            Assert.Equal("Hello, I'm working :)", contentResult.Value);
         }
     }
 }
