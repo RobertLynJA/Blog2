@@ -67,8 +67,22 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: |
-        dotnet test --no-build --verbosity normal DataFacade.Tests/DataFacade.Tests.csproj
-        dotnet test --no-build --verbosity normal API.Tests/API.Tests.csproj
+        dotnet test --logger trx --results-directory "TestResults-DataFacade" DataFacade.Tests/DataFacade.Tests.csproj
+        dotnet test --logger trx --results-directory "TestResults-API" API.Tests/API.Tests.csproj
+    - name: Upload dotnet test results - DataFacade
+      uses: actions/upload-artifact@v3
+      with:
+        name: dotnet-results-datafacade
+        path: TestResults-DataFacade
+      # Use always() to always run this step to publish test results when there are test failures
+      if: ${{ always() }}        
+    - name: Upload dotnet test results - API
+      uses: actions/upload-artifact@v3
+      with:
+        name: dotnet-results-api
+        path: TestResults-API
+      # Use always() to always run this step to publish test results when there are test failures
+      if: ${{ always() }}              
     - name: Publish
       run: |
         dotnet publish ./API/API.csproj  -c Release -o ./release        
