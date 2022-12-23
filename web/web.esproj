@@ -1,7 +1,4 @@
-<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.29-alpha">
-  <PropertyGroup Label="Globals">
-    <ProjectGuid>258ac132-2d3e-46a0-bc39-8c120e1a726b</ProjectGuid>
-  </PropertyGroup>
+<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.62-alpha">
   <PropertyGroup>
     <StartupCommand>set BROWSER=none&amp;&amp;npm start</StartupCommand>
     <JavaScriptTestRoot>src\</JavaScriptTestRoot>
