@@ -41,12 +41,8 @@ jobs:
 
   build-dotnet:
 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
   
-    strategy:
-      matrix:
-        node-version: [16.x]
-
     steps:
     - uses: actions/checkout@v3
     - name: Cache Nuget
