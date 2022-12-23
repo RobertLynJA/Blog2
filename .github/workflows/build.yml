@@ -73,7 +73,7 @@ jobs:
       if: ${{ always() }}        
     - name: Publish
       run: |
-        dotnet publish ./API/API.csproj  -c Release -o ./release        
+        dotnet publish ./API/API.csproj  -c Release -o ./release --os linux       
     - name: Upload a Build Artifact (.Net)
       uses: actions/upload-artifact@v3
       with:
