@@ -18,8 +18,8 @@ env:
   AZURE_API_WEBAPP_NAME: 'RobertLynJA'
 
 jobs:
+
   build-web:
-    name: Build
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@main
@@ -49,10 +49,8 @@ jobs:
         name: nextjs
         path: ./web/.next/standalone
 
-  build-dotnet:
-
+  build-api:
     runs-on: windows-latest
-  
     steps:
     - uses: actions/checkout@v3
     - name: Cache Nuget
@@ -91,9 +89,8 @@ jobs:
         path: ./release/**
         if-no-files-found: error
 
-  deploy-app-service:
-  
-    needs: build-dotnet
+  deploy-api-service:
+    needs: build-api
     runs-on: windows-latest
     if: ${{ github.event_name == 'push' }}
     environment:
@@ -125,7 +122,6 @@ jobs:
         package: './website'
         
   deploy-web:
-  
     needs: build-web
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'push' }}
