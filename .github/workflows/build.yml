@@ -11,7 +11,7 @@ on:
       - "main"
 
 env:
-  AZURE_NEXTJS_WEBAPP_NAME: 'NextJSAppService'   
+  AZURE_NEXTJS_WEBAPP_NAME: 'robertlynjaweb'   
   AZURE_WEBAPP_PACKAGE_PATH: './'         
   NODE_VERSION: '18.x'
   WEB_WORKING_DIRECTORY: './web'
