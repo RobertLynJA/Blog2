@@ -18,7 +18,7 @@ const Home: React.FC<{ test: Temperature[], error: string }> = (props) => {
   return (
     <div>
       <Head>
-        <title>Create Next App</title>
+        <title>RobertLynJA.com</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
