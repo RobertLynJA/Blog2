@@ -10,34 +10,44 @@ on:
     branches:
       - "main"
 
+env:
+  AZURE_NEXTJS_WEBAPP_NAME: 'NextJSAppService'   
+  AZURE_WEBAPP_PACKAGE_PATH: './'         
+  NODE_VERSION: '18.x'
+  WEB_WORKING_DIRECTORY: './web'
+  AZURE_API_WEBAPP_NAME: 'RobertLynJA'
+
 jobs:
-  build-react:
-
+  build-web:
+    name: Build
     runs-on: ubuntu-latest
-  
-    strategy:
-      matrix:
-        node-version: [16.x]
-
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
+    - uses: actions/checkout@main
+    - name: Use Node.js ${{ env.NODE_VERSION }}
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
-        cache-dependency-path: 'web/package-lock.json'
-    - name: BuildUI
+        cache-dependency-path: './web/package-lock.json'
+    - name: npm install, build, and test 
       run: |
-        npm install --prefix web
-        npm test --prefix web
-        npm run build --prefix web        
-    - name: Upload a Build Artifact (React)
+        # Build and test the project, then
+        # deploy to Azure Web App.
+        npm install
+        npm run build --if-present
+        npm run test:ci --if-present
+      working-directory: ${{ env.WEB_WORKING_DIRECTORY }}
+    - name: Move static folders into dynamic folder
+      run: |
+        cp -r ./public ./.next/standalone                     
+        cp -r ./.next/static ./.next/standalone/.next/static
+        rm ./.next/standalone/package.json #Remove package.json to force the server to use server.js
+      working-directory: ${{ env.WEB_WORKING_DIRECTORY }}
+    - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v3
       with:
-        name: react
-        path: ./web/build/**
-        if-no-files-found: error
+        name: nextjs
+        path: ./web/.next/standalone
 
   build-dotnet:
 
@@ -110,13 +120,13 @@ jobs:
     - name: 'Run Azure webapp deploy action using publish profile credentials'
       uses: azure/webapps-deploy@v2.2.5
       with: 
-        app-name: 'RobertLynJA'
+        app-name: ${{ env.AZURE_API_WEBAPP_NAME }}
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE  }}
         package: './website'
         
-  deploy-static-app:
+  deploy-web:
   
-    needs: build-react
+    needs: build-web
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'push' }}
     
@@ -125,16 +135,13 @@ jobs:
       url: https://www.robertlynja.com        
       
     steps:      
-    - name: Download a Build Artifact (React)
+    - name: Download a Build Artifact
       uses: actions/download-artifact@v3
       with:
-        name: react
-        path: react
-    - name: 'Deploy Static Web App'
-      id: builddeploy
-      uses: Azure/static-web-apps-deploy@v1
-      with:
-        azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
-        action: "upload"
-        app_location: "react" # App source code path relative to repository root
-        skip_app_build: true
+        name: nextjs
+    - name: 'Deploy to Azure WebApp'
+      uses: azure/webapps-deploy@v2
+      with: 
+        app-name: ${{ env.AZURE_NEXTJS_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.AZURE_NEXTJS_PUBLISH_PROFILE }}
+        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
