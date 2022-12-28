@@ -21,7 +21,7 @@ namespace API.Controllers
             _storiesDataSource = storiesDataSource;
         }
 
-        // GET api/<StoriesController>
+        // GET <StoriesController>
         [HttpGet()]
         [ProducesResponseType(typeof(Story), StatusCodes.Status200OK)]
         [OutputCache(Duration = 600)]
@@ -34,13 +34,13 @@ namespace API.Controllers
                 return Ok(stories);
             }
             catch (Exception ex)
-            {
+        {
                 _logger.LogError(ex, "StoriesController.Get");
                 throw;
             }
         }
 
-        // GET api/<StoriesController>/5
+        // GET <StoriesController>/5
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(Story), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
