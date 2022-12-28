@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DataFacade.DataSource;
+using DataFacade.DataSource.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace API
 {
@@ -18,6 +20,8 @@ namespace API
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
+
+            services.AddApplicationInsightsTelemetry();
             
             services.AddDbContext<DataFacade.BlogContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -34,6 +38,10 @@ namespace API
                                       .AllowAnyHeader();
                                   });
             });
+
+            services.AddTransient<IStoriesDataSource, StoriesDataSource>();
+
+            services.AddOutputCache();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,6 +62,8 @@ namespace API
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
+
+            app.UseOutputCache();
 
             app.UseEndpoints(endpoints =>
             {

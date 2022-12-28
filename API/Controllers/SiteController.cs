@@ -3,14 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    [Route("/")]
     [ApiController]
     public class SiteController : ControllerBase
     {
-        [Route("/")]
         [HttpGet]
-        public ActionResult<string> GetHelloMessage()
+        public string GetHelloMessage()
         {
-            return Ok("Hello, I'm working :)");
+            return "Hello, I'm working :)";
         }
     }
 }
