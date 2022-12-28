@@ -1,17 +1,17 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import axios from 'axios';
-import { useEffect } from 'react';
-import { GetStaticProps, GetStaticPaths, GetServerSideProps } from 'next'
 
-type Story = {
+import { NextPage } from 'next'
+
+interface Story {
   id: string,
   title: string,
   content: string,
   publishedDate: string
 };
 
-const Home: React.FC<{ stories: Story[], error: string }> = (props) => {
+const Home: NextPage<{ stories: Story[], error: string }> = (props) => {
 
   console.log(props.stories);
 
@@ -46,9 +46,7 @@ const Home: React.FC<{ stories: Story[], error: string }> = (props) => {
   )
 };
 
-export default Home;
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
+Home.getInitialProps = async () => {
   let error: any = null;
   let result: any;
 
@@ -59,8 +57,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   return {
-    props: {
-      stories: result.data
-    }, // will be passed to the page component as props
+    stories: result.data as Story[],
+    error: error
   }
 }
+
+export default Home;
