@@ -4,16 +4,16 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { GetStaticProps, GetStaticPaths, GetServerSideProps } from 'next'
 
-import styles from '@/pages/index.module.css'
-
-type Temperature = {
-  temperatureC: string;
-  date: string;
+type Story = {
+  id: string,
+  title: string,
+  content: string,
+  publishedDate: string
 };
 
-const Home: React.FC<{ test: Temperature[], error: string }> = (props) => {
+const Home: React.FC<{ stories: Story[], error: string }> = (props) => {
 
-  console.log(props.test);
+  console.log(props.stories);
 
   return (
     <div>
@@ -31,12 +31,12 @@ const Home: React.FC<{ test: Temperature[], error: string }> = (props) => {
           Ignore random test data:
         </h2>
         <div>
-          {props.test?.map(item => <div key={item.date}>
-            {item.temperatureC}
+          {props.stories?.map(item => <div key={item.id}>
+            {item.content} - {(new Date(item.publishedDate).toString())}
           </div>)}
         </div>
         <div>
-          { props.error }
+          {props.error}
         </div>
       </main>
 
@@ -49,24 +49,18 @@ const Home: React.FC<{ test: Temperature[], error: string }> = (props) => {
 export default Home;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  context.res.setHeader(
-    'Cache-Control',
-    'public, s-maxage=60, stale-while-revalidate=3600'
-  )
-
   let error: any = null;
   let result: any;
 
   try {
-    result = await axios.get(process.env.API_ROOT + "/weatherforecast");
+    result = await axios.get(process.env.API_ROOT + "/stories");
   } catch (err: any) {
     error = err.message;
   }
 
   return {
     props: {
-      test: error ? [] : result.data,
-      error: error
+      stories: result.data
     }, // will be passed to the page component as props
   }
 }

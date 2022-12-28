@@ -1,20 +1,43 @@
-﻿using DataFacade.Models;
+﻿using DataFacade.DataSource.Interfaces;
+using DataFacade.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using System.Security.Cryptography.X509Certificates;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class StoriesController : ControllerBase
     {
-        private ILogger _Logger;
+        private readonly ILogger<StoriesController> _logger;
+        private readonly IStoriesDataSource _storiesDataSource;
 
-        public StoriesController(ILogger logger) 
+        public StoriesController(ILogger<StoriesController> logger, IStoriesDataSource storiesDataSource) 
         {
-            _Logger = logger;
+            _logger = logger;
+            _storiesDataSource = storiesDataSource;
+        }
+
+        // GET api/<StoriesController>
+        [HttpGet()]
+        [ProducesResponseType(typeof(Story), StatusCodes.Status200OK)]
+        [OutputCache(Duration = 600)]
+        public IActionResult Get()
+        {
+            try
+            {
+                var stories = _storiesDataSource.GetStories();
+
+                return Ok(stories);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "StoriesController.Get");
+                throw;
+            }
         }
 
         // GET api/<StoriesController>/5
