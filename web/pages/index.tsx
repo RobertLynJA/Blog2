@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import axios from 'axios';
+import CookieConsent from 'react-cookie-consent';
 
 import { NextPage } from 'next'
 
@@ -42,6 +43,7 @@ const Home: NextPage<{ stories: Story[], error: string }> = (props) => {
 
       <footer>
       </footer>
+      <CookieConsent>This website uses cookies to enhance the user experience.</CookieConsent>
     </div>
   )
 };
