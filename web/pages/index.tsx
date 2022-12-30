@@ -1,9 +1,13 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import axios from 'axios';
-import CookieConsent from 'react-cookie-consent';
 
-import { NextPage } from 'next'
+import { NextPage, GetServerSideProps } from 'next'
+
+interface Props {
+  stories: Story[];
+  error: string;
+}
 
 interface Story {
   id: string,
@@ -12,7 +16,7 @@ interface Story {
   publishedDate: string
 };
 
-const Home: NextPage<{ stories: Story[], error: string }> = (props) => {
+const Home: NextPage<Props> = (props) => {
 
   console.log(props.stories);
 
@@ -43,12 +47,11 @@ const Home: NextPage<{ stories: Story[], error: string }> = (props) => {
 
       <footer>
       </footer>
-      <CookieConsent>This website uses cookies to enhance the user experience.</CookieConsent>
     </div>
   )
 };
 
-Home.getInitialProps = async () => {
+export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
   let error: any = null;
   let result: any;
 
@@ -59,8 +62,10 @@ Home.getInitialProps = async () => {
   }
 
   return {
-    stories: result.data as Story[],
-    error: error
+    props: {
+      stories: result.data as Story[],
+      error: error
+    },
   }
 }
 
