@@ -61,6 +61,27 @@ jobs:
         name: nextjs
         path: ./web/.next/standalone
 
+  deploy-web:
+    needs: [build-web, build-api]
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' }}
+    
+    environment:
+      name: Production
+      url: https://www.robertlynja.com        
+      
+    steps:      
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: nextjs
+    - name: 'Deploy to Azure WebApp'
+      uses: azure/webapps-deploy@v2
+      with: 
+        app-name: ${{ env.AZURE_NEXTJS_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.AZURE_NEXTJS_PUBLISH_PROFILE }}
+        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
   build-api:
     runs-on: windows-latest
     steps:
@@ -109,7 +130,7 @@ jobs:
         if-no-files-found: error
 
   deploy-api-service:
-    needs: build-api
+    needs: [build-web, build-api]
     runs-on: windows-latest
     if: ${{ github.event_name == 'push' }}
     environment:
@@ -140,23 +161,3 @@ jobs:
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE  }}
         package: './website'
         
-  deploy-web:
-    needs: build-web
-    runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' }}
-    
-    environment:
-      name: Production
-      url: https://www.robertlynja.com        
-      
-    steps:      
-    - name: Download a Build Artifact
-      uses: actions/download-artifact@v3
-      with:
-        name: nextjs
-    - name: 'Deploy to Azure WebApp'
-      uses: azure/webapps-deploy@v2
-      with: 
-        app-name: ${{ env.AZURE_NEXTJS_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.AZURE_NEXTJS_PUBLISH_PROFILE }}
-        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
