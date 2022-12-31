@@ -29,6 +29,18 @@ jobs:
         node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
         cache-dependency-path: './web/package-lock.json'
+    - name: Cache NextJS
+      uses: actions/cache@v3
+      with:
+        # See here for caching with `yarn` https://github.com/actions/cache/blob/main/examples.md#node---yarn or you can leverage caching with actions/setup-node https://github.com/actions/setup-node
+        path: |
+          ~/.npm
+          ${{ github.workspace }}/web/.next/cache
+        # Generate a new cache whenever packages or source files change.
+        key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+        # If source files changed but packages didn't, rebuild from a prior cache.
+        restore-keys: |
+          ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-        
     - name: npm install, build, and test 
       run: |
         # Build and test the project, then
@@ -49,27 +61,6 @@ jobs:
         name: nextjs
         path: ./web/.next/standalone
 
-  deploy-web:
-    needs: [build-web, build-api]
-    runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' }}
-    
-    environment:
-      name: Production
-      url: https://www.robertlynja.com        
-      
-    steps:      
-    - name: Download a Build Artifact
-      uses: actions/download-artifact@v3
-      with:
-        name: nextjs
-    - name: 'Deploy to Azure WebApp'
-      uses: azure/webapps-deploy@v2
-      with: 
-        app-name: ${{ env.AZURE_NEXTJS_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.AZURE_NEXTJS_PUBLISH_PROFILE }}
-        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-
   build-api:
     runs-on: windows-latest
     steps:
@@ -82,6 +73,13 @@ jobs:
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
         restore-keys: |
           ${{ runner.os }}-nuget-  
+    - name: Cache npm dependencies
+      uses: actions/cache@v2
+      with:
+        path: '~/.npm'
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-          
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
@@ -89,7 +87,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build -c Release --no-restore
     - name: Test
       run: |
         dotnet test --logger trx --results-directory "TestResults" 
@@ -102,7 +100,7 @@ jobs:
       if: ${{ always() }}        
     - name: Publish
       run: |
-        dotnet publish ./API/API.csproj  -c Release -o ./release --os linux       
+        dotnet publish ./API/API.csproj  -c Release -o ./release --os linux --no-restore       
     - name: Upload a Build Artifact (.Net)
       uses: actions/upload-artifact@v3
       with:
@@ -111,12 +109,12 @@ jobs:
         if-no-files-found: error
 
   deploy-api-service:
-    needs: [build-web, build-api]
+    needs: build-api
     runs-on: windows-latest
     if: ${{ github.event_name == 'push' }}
     environment:
       name: Production
-      url: https://api.robertlynja.com
+      url: https://www.robertlynja.com
       
     defaults:
       run:
@@ -141,4 +139,24 @@ jobs:
         app-name: ${{ env.AZURE_API_WEBAPP_NAME }}
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE  }}
         package: './website'
-       
+        
+  deploy-web:
+    needs: build-web
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' }}
+    
+    environment:
+      name: Production
+      url: https://www.robertlynja.com        
+      
+    steps:      
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: nextjs
+    - name: 'Deploy to Azure WebApp'
+      uses: azure/webapps-deploy@v2
+      with: 
+        app-name: ${{ env.AZURE_NEXTJS_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.AZURE_NEXTJS_PUBLISH_PROFILE }}
+        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
