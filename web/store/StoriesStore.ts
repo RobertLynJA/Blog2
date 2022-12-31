@@ -11,9 +11,11 @@ export interface Story {
 }
 
 export const getStoriesByDate = async (pageSize: number, page: number) => {
+    const url = `${API_ROOT}/api/Stories/ByDate?pageSize=${pageSize}&page=${page}`;
+    
     try
     {
-        const { data } = await axios.get<Story[]>(`${API_ROOT}/api/Stories/ByDate?pageSize=${pageSize}&page=${page}`);
+        const { data } = await axios.get<Story[]>(url);
         return data;
     } catch (error : any) {
         if (axios.isAxiosError(error)) {
@@ -21,7 +23,7 @@ export const getStoriesByDate = async (pageSize: number, page: number) => {
           } else   { 
             //handleUnexpectedError(error);
           }
-        ErrorLogger(error);
+        ErrorLogger(url, error);
         throw new Error(error.message);
     }
 }
