@@ -1,5 +1,5 @@
 const ErrorLogger = (error: string) : void => {
-    console.log(error);
+    console.error(`${error}` );
 }
 
 export default ErrorLogger;
