@@ -11,6 +11,7 @@
     "axios": "^1.2.1",
     "next": "latest",
     "react": "^18.1.0",
+    "react-cookie-consent": "^8.0.1",
     "react-dom": "^18.1.0"
   },
   "devDependencies": {

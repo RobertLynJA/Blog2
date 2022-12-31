@@ -1,11 +1,15 @@
 # Blog2
 
 Just a project to implement a blogging platform for personal use.
+- Hosted on Azure
 
 ### Technology in use:
 
-- .Net 7
+- .Net
   - Web API
   - Entity Framework Core
   - xUnit
-- React 18 
+- Next.js
+- Tailwind CSS
+- Azure SQL 
+- Azure App Service

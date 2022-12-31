@@ -8,7 +8,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace API.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class StoriesController : ControllerBase
     {
@@ -22,7 +22,7 @@ namespace API.Controllers
         }
 
         // GET <StoriesController>
-        [HttpGet()]
+        [HttpGet("ByDate")]
         [ProducesResponseType(typeof(Story), StatusCodes.Status200OK)]
         [OutputCache(Duration = 600)]
         public IActionResult Get()
