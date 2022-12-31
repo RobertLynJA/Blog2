@@ -21,7 +21,7 @@ export const getStoriesByDate = async (pageSize: number, page: number) => {
           } else   { 
             //handleUnexpectedError(error);
           }
-        ErrorLogger(error.message);
+        ErrorLogger(error);
         throw new Error(error.message);
     }
 }
