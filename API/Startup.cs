@@ -17,10 +17,19 @@ namespace API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers(options =>
+            {
+                options.CacheProfiles.Add("10MinutesPublic",
+                    new Microsoft.AspNetCore.Mvc.CacheProfile()
+                    {
+                        Duration = 10 * 60,
+                        NoStore = false,
+                        Location = Microsoft.AspNetCore.Mvc.ResponseCacheLocation.Any
+                    });
+            });
+
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
-
             services.AddApplicationInsightsTelemetry();
             
             services.AddDbContext<DataFacade.BlogContext>(options =>
