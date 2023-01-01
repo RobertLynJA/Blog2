@@ -24,7 +24,7 @@ namespace API.Controllers
         // GET <StoriesController>
         [HttpGet("ByDate")]
         [ProducesResponseType(typeof(Story), StatusCodes.Status200OK)]
-        [OutputCache(Duration = 600)]
+        [ResponseCache(CacheProfileName = "10MinutesPublic")]
         public IActionResult Get()
         {
             try
