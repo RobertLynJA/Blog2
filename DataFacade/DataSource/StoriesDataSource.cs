@@ -1,4 +1,5 @@
 ﻿using DataFacade.DataSource.Interfaces;
+using DataFacade.DB;
 using DataFacade.Models;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
@@ -15,18 +16,12 @@ namespace DataFacade.DataSource
     public class StoriesDataSource : IStoriesDataSource
     {
         private readonly ILogger<StoriesDataSource> _logger;
-        private readonly string _connectionString;
+        private readonly CosmosDB _db;
         
-        public StoriesDataSource(ILogger<StoriesDataSource> logger, string connectionString)
+        public StoriesDataSource(ILogger<StoriesDataSource> logger, CosmosDB db)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-
-            if (connectionString == null || connectionString.Length == 0)
-            {
-                throw new ArgumentNullException(nameof(connectionString));
-            }
-
-            _connectionString = connectionString;
+            _db = db ?? throw new ArgumentNullException(nameof(db));
 
             _logger.LogInformation($"{nameof(StoriesDataSource)}()");
         }
@@ -38,16 +33,7 @@ namespace DataFacade.DataSource
 
         public async Task<IEnumerable<Story>> GetStoriesByDateAsync(int page, int numberRows)
         {
-            using CosmosClient client = new(_connectionString, new CosmosClientOptions()
-            {
-                SerializerOptions = new CosmosSerializationOptions()
-                {
-                    PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase,
-                }
-            });
-
-            Database db = client.GetDatabase("Blog");
-            Container container = db.GetContainer("stories");
+            Container container = _db.StoriesContainer;
 
             var queryable = container.GetItemLinqQueryable<Story>();
 
