@@ -1,6 +1,6 @@
 ﻿using DataFacade.DataSource;
 using DataFacade.DataSource.Interfaces;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace API
 {
@@ -31,10 +31,10 @@ namespace API
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
             services.AddApplicationInsightsTelemetry();
-            
-            services.AddDbContext<DataFacade.BlogContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddApplicationInsightsTelemetry();
+
+            services.AddTransient<IStoriesDataSource>((serviceProvider) => 
+                new StoriesDataSource(serviceProvider.GetService<ILogger<StoriesDataSource>>()!, Configuration.GetConnectionString("CosmosDBConnection")!
+            ));
 
             services.AddCors(options =>
             {
@@ -61,8 +61,6 @@ namespace API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
-            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
