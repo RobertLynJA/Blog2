@@ -25,11 +25,11 @@ namespace API.Controllers
         [HttpGet("ByDate")]
         [ProducesResponseType(typeof(Story), StatusCodes.Status200OK)]
         [ResponseCache(CacheProfileName = "10MinutesPublic")]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
             try
             {
-                var stories = _storiesDataSource.GetStories();
+                var stories = await _storiesDataSource.GetStoriesByDateAsync(0, 10);
 
                 return Ok(stories);
             }
