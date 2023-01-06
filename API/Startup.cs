@@ -1,5 +1,6 @@
 ﻿using DataFacade.DataSource;
 using DataFacade.DataSource.Interfaces;
+using DataFacade.DB;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace API
@@ -32,9 +33,8 @@ namespace API
             services.AddSwaggerGen();
             services.AddApplicationInsightsTelemetry();
 
-            services.AddTransient<IStoriesDataSource>((serviceProvider) =>
-                new StoriesDataSource(serviceProvider.GetService<ILogger<StoriesDataSource>>()!, Configuration.GetConnectionString("CosmosConnection")!
-            ));
+            services.AddTransient<IStoriesDataSource, StoriesDataSource>();
+            services.AddSingleton<CosmosDB>((serviceProvider) => new CosmosDB(serviceProvider.GetService<ILogger<CosmosDB>>()!, Configuration.GetConnectionString("CosmosConnection")!));
 
             services.AddCors(options =>
             {
@@ -54,7 +54,7 @@ namespace API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || env.IsStaging() || env.IsEnvironment("Local"))
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
