@@ -1,5 +1,7 @@
 ﻿using DataFacade.DataSource.Interfaces;
 using DataFacade.Models;
+using Microsoft.Azure.Cosmos;
+using Microsoft.Azure.Cosmos.Linq;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -18,50 +20,70 @@ namespace DataFacade.DataSource
         public StoriesDataSource(ILogger<StoriesDataSource> logger, string connectionString)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
+
+            if (connectionString == null || connectionString.Length == 0)
+            {
+                throw new ArgumentNullException(nameof(connectionString));
+            }
+
+            _connectionString = connectionString;
 
             _logger.LogInformation($"{nameof(StoriesDataSource)}()");
         }
 
-        public ReadOnlyCollection<Story> GetStories()
+        public Task<IEnumerable<Story>> GetStoriesAsync(int year, int month)
         {
-            List<Story> stories = new()
+            throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<Story>> GetStoriesByDateAsync(int page, int numberRows)
+        {
+            using CosmosClient client = new(_connectionString, new CosmosClientOptions()
             {
-                new Story() { Content = "Hello from NextJS", ID = 1, PublishedDate = DateTime.UtcNow, Title = "First" },
-                new Story() { Content = "Hello from TailWind", ID = 2, PublishedDate = DateTime.UtcNow, Title = "Second" }
-            };
+                SerializerOptions = new CosmosSerializationOptions()
+                {
+                    PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase,
+                }
+            });
 
-            _logger.LogInformation($"{nameof(StoriesDataSource)}:{nameof(GetStories)}()");
+            Database db = client.GetDatabase("Blog");
+            Container container = db.GetContainer("stories");
 
-            return new ReadOnlyCollection<Story>(stories);
+            var queryable = container.GetItemLinqQueryable<Story>();
+
+            var matches = queryable
+                .OrderByDescending(s => s.PublishedDate)
+                .Skip(page * numberRows)
+                .Take(numberRows);
+
+            using var feed = matches.ToFeedIterator<Story>();
+
+            List<Story> stories = new();
+
+            while(feed.HasMoreResults)
+            {
+                var response = await feed.ReadNextAsync();
+
+                foreach (var story in response)
+                {
+                    stories.Add(story);
+                }
+            }
+
+            return stories;
         }
 
-        public IEnumerable<Story> GetStories(int year, int month)
+        public Task<Story> GetStoryAsync(string storyId)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Story> GetStoriesByDate(int page, int numberRows)
+        public Task<IEnumerable<int>> GetStoryMonthsAsync(int year)
         {
             throw new NotImplementedException();
         }
 
-        public Story GetStory(string storyId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int GetStoryCount()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<int> GetStoryMonths(int year)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<int> GetStoryYears()
+        public Task<IEnumerable<int>> GetStoryYearsAsync()
         {
             throw new NotImplementedException();
         }
