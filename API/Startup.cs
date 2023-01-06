@@ -32,8 +32,8 @@ namespace API
             services.AddSwaggerGen();
             services.AddApplicationInsightsTelemetry();
 
-            services.AddTransient<IStoriesDataSource>((serviceProvider) => 
-                new StoriesDataSource(serviceProvider.GetService<ILogger<StoriesDataSource>>()!, Configuration.GetConnectionString("CosmosDBConnection")!
+            services.AddTransient<IStoriesDataSource>((serviceProvider) =>
+                new StoriesDataSource(serviceProvider.GetService<ILogger<StoriesDataSource>>()!, Configuration.GetConnectionString("CosmosConnection")!
             ));
 
             services.AddCors(options =>
@@ -47,8 +47,6 @@ namespace API
                                       .AllowAnyHeader();
                                   });
             });
-
-            services.AddTransient<IStoriesDataSource, StoriesDataSource>();
 
             services.AddOutputCache();
         }
