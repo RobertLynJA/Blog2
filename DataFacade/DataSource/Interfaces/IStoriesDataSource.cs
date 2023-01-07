@@ -1,4 +1,4 @@
-﻿using DataFacade.Models;
+﻿using DataFacade.Models.Stories;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,11 +10,11 @@ namespace DataFacade.DataSource.Interfaces
 {
     public interface IStoriesDataSource
     {
-        Task<IEnumerable<Story>> GetStoriesByDateAsync(int page, int numberRows);
-        Task<IEnumerable<Story>> GetStoriesAsync(int year, int month);
+        Task<Collection<Story>> GetStoriesByDateAsync(int page, int numberRows);
+        Task<Collection<Story>> GetStoriesAsync(int year, int month);
         Task<Story> GetStoryAsync(string storyId);
-        Task<IEnumerable<int>> GetStoryYearsAsync();
-        Task<IEnumerable<int>> GetStoryMonthsAsync(int year);
+        Task<Collection<int>> GetStoryYearsAsync();
+        Task<Collection<int>> GetStoryMonthsAsync(int year);
         //Data.StoryAttachment GetAttachment(int attachmentId);
         //IEnumerable<Data.StoryAttachment> GetAttachments(int storyId);
     }

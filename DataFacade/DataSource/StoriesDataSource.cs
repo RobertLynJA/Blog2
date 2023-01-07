@@ -1,6 +1,6 @@
 ﻿using DataFacade.DataSource.Interfaces;
 using DataFacade.DB;
-using DataFacade.Models;
+using DataFacade.Models.Stories;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
 using Microsoft.Extensions.Logging;
@@ -26,12 +26,12 @@ namespace DataFacade.DataSource
             _logger.LogInformation($"{nameof(StoriesDataSource)}()");
         }
 
-        public Task<IEnumerable<Story>> GetStoriesAsync(int year, int month)
+        public Task<Collection<Story>> GetStoriesAsync(int year, int month)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Story>> GetStoriesByDateAsync(int page, int numberRows)
+        public async Task<Collection<Story>> GetStoriesByDateAsync(int page, int numberRows)
         {
             Container container = _db.StoriesContainer;
 
@@ -44,7 +44,7 @@ namespace DataFacade.DataSource
 
             using var feed = matches.ToFeedIterator<Story>();
 
-            List<Story> stories = new();
+            Collection<Story> stories = new();
 
             while(feed.HasMoreResults)
             {
@@ -64,12 +64,12 @@ namespace DataFacade.DataSource
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<int>> GetStoryMonthsAsync(int year)
+        public Task<Collection<int>> GetStoryMonthsAsync(int year)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<int>> GetStoryYearsAsync()
+        public Task<Collection<int>> GetStoryYearsAsync()
         {
             throw new NotImplementedException();
         }
