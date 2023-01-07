@@ -33,7 +33,7 @@ namespace API.Controllers
                 var stories = await _storiesDataSource.GetStoriesByDateAsync(0, 10);
                 var result = _mapper.Map<IEnumerable<Models.Stories.Story>>(stories);
 
-                return Ok(stories);
+                return Ok(result);
             }
             catch (Exception ex)
         {
