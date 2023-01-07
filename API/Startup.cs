@@ -1,7 +1,4 @@
-﻿using DataFacade.DataSource;
-using DataFacade.DataSource.Interfaces;
-using DataFacade.DB;
-using Microsoft.Extensions.DependencyInjection;
+﻿using API.Models;
 
 namespace API
 {
@@ -30,11 +27,15 @@ namespace API
             });
 
             services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(options =>
+            {
+                options.SupportNonNullableReferenceTypes();
+            });
+
             services.AddApplicationInsightsTelemetry();
 
-            services.AddTransient<IStoriesDataSource, StoriesDataSource>();
-            services.AddSingleton<CosmosDB>((serviceProvider) => new CosmosDB(serviceProvider.GetService<ILogger<CosmosDB>>()!, Configuration.GetConnectionString("CosmosConnection")!));
+            services.AddTransient<DataFacade.DataSource.Interfaces.IStoriesDataSource, DataFacade.DataSource.StoriesDataSource>();
+            services.AddSingleton<DataFacade.DB.CosmosDB>((serviceProvider) => new DataFacade.DB.CosmosDB(serviceProvider.GetService<ILogger<DataFacade.DB.CosmosDB>>()!, Configuration.GetConnectionString("CosmosConnection")!));
 
             services.AddCors(options =>
             {
@@ -49,6 +50,7 @@ namespace API
             });
 
             services.AddOutputCache();
+            services.AddAutoMapper(typeof(StoriesProfile));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

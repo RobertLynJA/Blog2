@@ -1,8 +1,7 @@
-﻿using DataFacade.DataSource.Interfaces;
-using DataFacade.Models;
+﻿using AutoMapper;
+using DataFacade.DataSource.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
-using System.Security.Cryptography.X509Certificates;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,22 +13,25 @@ namespace API.Controllers
     {
         private readonly ILogger<StoriesController> _logger;
         private readonly IStoriesDataSource _storiesDataSource;
+        private readonly IMapper _mapper;
 
-        public StoriesController(ILogger<StoriesController> logger, IStoriesDataSource storiesDataSource) 
+        public StoriesController(ILogger<StoriesController> logger, IStoriesDataSource storiesDataSource, IMapper mapper) 
         {
             _logger = logger;
             _storiesDataSource = storiesDataSource;
+            _mapper = mapper;
         }
 
         // GET <StoriesController>
         [HttpGet("ByDate")]
-        [ProducesResponseType(typeof(Story), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.Stories.Story), StatusCodes.Status200OK)]
         [ResponseCache(CacheProfileName = "10MinutesPublic")]
         public async Task<IActionResult> Get()
         {
             try
             {
                 var stories = await _storiesDataSource.GetStoriesByDateAsync(0, 10);
+                var result = _mapper.Map<IEnumerable<Models.Stories.Story>>(stories);
 
                 return Ok(stories);
             }
@@ -42,9 +44,9 @@ namespace API.Controllers
 
         // GET <StoriesController>/5
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(Story), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.Stories.Story), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Get(int id)
+        public IActionResult Get(string id)
         {
             return NotFound();
         }
