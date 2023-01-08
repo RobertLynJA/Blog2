@@ -26,12 +26,12 @@ namespace DataFacade.DataSource
             _logger.LogInformation($"{nameof(StoriesDataSource)}()");
         }
 
-        public Task<Collection<Story>> GetStoriesAsync(int year, int month)
+        public Task<IReadOnlyList<Story>> GetStoriesAsync(int year, int month)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Collection<Story>> GetStoriesByDateAsync(int page, int numberRows)
+        public async Task<IReadOnlyList<Story>> GetStoriesByDateAsync(int page, int numberRows)
         {
             Container container = _db.StoriesContainer;
 
@@ -44,7 +44,7 @@ namespace DataFacade.DataSource
 
             using var feed = matches.ToFeedIterator<Story>();
 
-            Collection<Story> stories = new();
+            List<Story> stories = new();
 
             while(feed.HasMoreResults)
             {
@@ -64,12 +64,12 @@ namespace DataFacade.DataSource
             throw new NotImplementedException();
         }
 
-        public Task<Collection<int>> GetStoryMonthsAsync(int year)
+        public Task<IReadOnlyList<int>> GetStoryMonthsAsync(int year)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Collection<int>> GetStoryYearsAsync()
+        public Task<IReadOnlyList<int>> GetStoryYearsAsync()
         {
             throw new NotImplementedException();
         }
