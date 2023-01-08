@@ -10,11 +10,11 @@ namespace DataFacade.DataSource.Interfaces
 {
     public interface IStoriesDataSource
     {
-        Task<Collection<Story>> GetStoriesByDateAsync(int page, int numberRows);
-        Task<Collection<Story>> GetStoriesAsync(int year, int month);
+        Task<IReadOnlyList<Story>> GetStoriesByDateAsync(int page, int numberRows);
+        Task<IReadOnlyList<Story>> GetStoriesAsync(int year, int month);
         Task<Story> GetStoryAsync(string storyId);
-        Task<Collection<int>> GetStoryYearsAsync();
-        Task<Collection<int>> GetStoryMonthsAsync(int year);
+        Task<IReadOnlyList<int>> GetStoryYearsAsync();
+        Task<IReadOnlyList<int>> GetStoryMonthsAsync(int year);
         //Data.StoryAttachment GetAttachment(int attachmentId);
         //IEnumerable<Data.StoryAttachment> GetAttachments(int storyId);
     }
