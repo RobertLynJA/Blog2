@@ -34,6 +34,12 @@ export const getStory = async (id: string) => {
     const { data } = await axios.get<Story>(url);
     return data;
   } catch (error: any) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 404) {
+        return null;
+      }
+    }
+
     ErrorLogger(url, error);
     throw new Error(error.message);
   }

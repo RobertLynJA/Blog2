@@ -7,7 +7,7 @@ import { getStory, Story } from "../../store/StoriesStore";
 import StoryFull from "@/components/Stories/StoryFull";
 
 interface Props {
-  story: Story;
+  story: Story | null;
   error: string | null;
 }
 
@@ -23,7 +23,7 @@ const StoryPage: NextPage<Props> = (props) => {
       </Head>
 
       <main>
-        <StoryFull story={props.story} />
+        <StoryFull story={props.story!} />
       </main>
 
       <footer></footer>
@@ -34,10 +34,27 @@ const StoryPage: NextPage<Props> = (props) => {
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
+  var id = context.params!.id as string;
+
+  if (!id) {
+    return {
+      notFound: true,
+    };
+  }
+
   try {
+
+    var story = await getStory(id);
+
+    if (!story) {
+      return {
+        notFound: true,
+      };
+    }
+
     return {
       props: {
-        story: await getStory(context.params.id),
+        story: story,
         error: null,
       },
     };
