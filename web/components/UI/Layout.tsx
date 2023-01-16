@@ -1,12 +1,11 @@
-import { NextPage } from "next";
-import { ReactNode } from "react";
+import { ReactNode, FunctionComponent } from "react";
 import CookieConsent from "react-cookie-consent";
 
 interface Props {
   children: ReactNode;
 }
 
-const Layout: NextPage<Props> = (props) => {
+const Layout: FunctionComponent<Props> = (props) => {
   return (
     <>
       {props.children}

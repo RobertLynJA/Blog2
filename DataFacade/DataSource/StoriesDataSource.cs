@@ -1,4 +1,5 @@
-﻿using DataFacade.DataSource.Interfaces;
+﻿using Azure;
+using DataFacade.DataSource.Interfaces;
 using DataFacade.DB;
 using DataFacade.Models.Stories;
 using Microsoft.Azure.Cosmos;
@@ -33,9 +34,7 @@ namespace DataFacade.DataSource
 
         public async Task<IReadOnlyList<Story>> GetStoriesByDateAsync(int page, int numberRows)
         {
-            Container container = _db.StoriesContainer;
-
-            var queryable = container.GetItemLinqQueryable<Story>();
+            var queryable = _db.StoriesContainer.GetItemLinqQueryable<Story>();
 
             var matches = queryable
                 .OrderByDescending(s => s.PublishedDate)
@@ -59,9 +58,33 @@ namespace DataFacade.DataSource
             return stories;
         }
 
-        public Task<Story> GetStoryAsync(string storyId)
+        public async Task<Story?> GetStoryAsync(string storyId)
         {
-            throw new NotImplementedException();
+            if (storyId == null)
+            {
+                throw new ArgumentNullException(nameof(storyId));
+            }
+
+            var queryable = _db.StoriesContainer.GetItemLinqQueryable<Story>();
+
+            var matches = queryable
+                .Where(s => s.ID == storyId);
+
+            using var feed = matches.ToFeedIterator<Story>();
+
+            List<Story> stories = new();
+
+            while (feed.HasMoreResults)
+            {
+                var response = await feed.ReadNextAsync();
+
+                foreach (var story in response)
+                {
+                    return story;
+                }
+            }
+
+            return null;
         }
 
         public Task<IReadOnlyList<int>> GetStoryMonthsAsync(int year)

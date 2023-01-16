@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DataFacade.DataSource.Interfaces;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 
@@ -15,7 +16,7 @@ namespace API.Controllers
         private readonly IStoriesDataSource _storiesDataSource;
         private readonly IMapper _mapper;
 
-        public StoriesController(ILogger<StoriesController> logger, IStoriesDataSource storiesDataSource, IMapper mapper) 
+        public StoriesController(ILogger<StoriesController> logger, IStoriesDataSource storiesDataSource, IMapper mapper)
         {
             _logger = logger;
             _storiesDataSource = storiesDataSource;
@@ -36,8 +37,8 @@ namespace API.Controllers
                 return Ok(result);
             }
             catch (Exception ex)
-        {
-                _logger.LogError(ex, "StoriesController.Get");
+            {
+                _logger.LogError(ex, Request.GetDisplayUrl());
                 throw;
             }
         }
@@ -46,9 +47,26 @@ namespace API.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(Models.Stories.Story), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Get(string id)
+        public async Task<IActionResult> Get(string id)
         {
-            return NotFound();
+            try
+            {
+                var story = await _storiesDataSource.GetStoryAsync(id);
+
+                if (story == null)
+                {
+                    return NotFound();
+                }
+
+                var result = _mapper.Map<Models.Stories.Story>(story);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, Request.GetDisplayUrl());
+                throw;
+            }
         }
     }
 }
