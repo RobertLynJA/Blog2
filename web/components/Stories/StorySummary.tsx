@@ -9,7 +9,7 @@ interface Props {
 
 const StorySummary: FunctionComponent<Props> = (props) => {
   return (
-    <div style={{border:"1px solid black;"}}>
+    <div style={{border:"1px solid black"}}>
       <Link href={`/stories/${encodeURIComponent(props.story.id)}`}>
         {props.story.title}
       </Link>
