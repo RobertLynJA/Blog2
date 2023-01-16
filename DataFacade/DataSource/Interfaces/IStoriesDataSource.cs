@@ -12,7 +12,7 @@ namespace DataFacade.DataSource.Interfaces
     {
         Task<IReadOnlyList<Story>> GetStoriesByDateAsync(int page, int numberRows);
         Task<IReadOnlyList<Story>> GetStoriesAsync(int year, int month);
-        Task<Story> GetStoryAsync(string storyId);
+        Task<Story?> GetStoryAsync(string storyId);
         Task<IReadOnlyList<int>> GetStoryYearsAsync();
         Task<IReadOnlyList<int>> GetStoryMonthsAsync(int year);
         //Data.StoryAttachment GetAttachment(int attachmentId);

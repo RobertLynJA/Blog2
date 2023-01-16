@@ -3,6 +3,8 @@ import Image from "next/image";
 import { NextPage, GetServerSideProps } from "next";
 
 import { getStoriesByDate, Story } from "../store/StoriesStore";
+import StorySummary from "@/components/Stories/StorySummary";
+
 
 interface Props {
   stories: Story[];
@@ -26,9 +28,7 @@ const Home: NextPage<Props> = (props) => {
         <h2>Ignore random test data:</h2>
         <div>
           {props.stories?.map((item) => (
-            <div key={item.id}>
-              {item.content} - {new Date(item.publishedDate).toString()}
-            </div>
+            <StorySummary story={item} key={item.id} />            
           ))}
         </div>
         <div>{props.error}</div>
