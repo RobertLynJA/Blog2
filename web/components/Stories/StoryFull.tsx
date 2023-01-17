@@ -1,4 +1,5 @@
 import { FunctionComponent } from 'react';
+import ReactMarkdown from "react-markdown";
 
 import { Story } from 'store/StoriesStore';
 
@@ -9,8 +10,14 @@ interface Props {
 const StoryFull : FunctionComponent<Props> = props => {
   return (
     <div>
-      {props.story.content} - {new Date(props.story.publishedDate).toUTCString()}
+    <div>
+      {props.story.title}
     </div>
+    <div>
+      <ReactMarkdown children={props.story.content} />
+    </div>
+    <div>{new Date(props.story.publishedDate).toUTCString()}</div>
+  </div>
   );
 };
 
