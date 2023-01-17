@@ -1,24 +1,25 @@
-import { FunctionComponent } from 'react';
-import ReactMarkdown from "react-markdown";
+import React, { FunctionComponent } from "react";
 
-import { Story } from 'store/StoriesStore';
+import { Story } from "store/StoriesStore";
+import StoryContent from "./StoryContent";
 
 interface Props {
   story: Story;
 }
 
-const StoryFull : FunctionComponent<Props> = props => {
+const StoryFull: FunctionComponent<Props> = (props) => {
   return (
     <div>
-    <div>
-      {props.story.title}
+      <div className="text-xl">{props.story.title}</div>
+      <StoryContent
+        content={props.story.content}
+        encoding={props.story.encoding}
+      />
+      <div className="text-sm">
+        {new Date(props.story.publishedDate).toUTCString()}
+      </div>
     </div>
-    <div>
-      <ReactMarkdown children={props.story.content} />
-    </div>
-    <div>{new Date(props.story.publishedDate).toUTCString()}</div>
-  </div>
   );
 };
 
-export default StoryFull;
+export default React.memo(StoryFull);

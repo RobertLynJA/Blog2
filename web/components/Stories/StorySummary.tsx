@@ -1,8 +1,8 @@
-import { FunctionComponent } from "react";
+import React, { FunctionComponent } from "react";
 import Link from "next/link";
-import ReactMarkdown from "react-markdown";
 
 import { Story } from "store/StoriesStore";
+import StoryContent from "./StoryContent";
 
 interface Props {
   story: Story;
@@ -10,18 +10,24 @@ interface Props {
 
 const StorySummary: FunctionComponent<Props> = (props) => {
   return (
-    <div style={{ border: "1px solid black" }}>
+    <div>
       <div>
-        <Link href={`/stories/${encodeURIComponent(props.story.id)}`}>
+        <Link
+          href={`/stories/${encodeURIComponent(props.story.id)}`}
+          className="text-xl"
+        >
           {props.story.title}
         </Link>
       </div>
-      <div>
-        <ReactMarkdown children={props.story.content} />
+      <StoryContent
+        content={props.story.content}
+        encoding={props.story.encoding}
+      />
+      <div className="text-sm">
+        {new Date(props.story.publishedDate).toUTCString()}
       </div>
-      <div>{new Date(props.story.publishedDate).toUTCString()}</div>
     </div>
   );
 };
 
-export default StorySummary;
+export default React.memo(StorySummary);
