@@ -8,6 +8,7 @@ export interface Story {
   title: string;
   content: string;
   publishedDate: string;
+  encoding: string;
 }
 
 const x = {
