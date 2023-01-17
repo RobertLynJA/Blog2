@@ -8,7 +8,6 @@ import StoryFull from "@/components/Stories/StoryFull";
 
 interface Props {
   story: Story | null;
-  error: string | null;
 }
 
 const StoryPage: NextPage<Props> = (props) => {
@@ -42,30 +41,19 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     };
   }
 
-  try {
+  var story = await getStory(id);
 
-    var story = await getStory(id);
-
-    if (!story) {
-      return {
-        notFound: true,
-      };
-    }
-
+  if (!story) {
     return {
-      props: {
-        story: story,
-        error: null,
-      },
-    };
-  } catch (error: any) {
-    return {
-      props: {
-        story: null,
-        error: error.message,
-      },
+      notFound: true,
     };
   }
+
+  return {
+    props: {
+      story: story,
+    },
+  };
 };
 
 export default StoryPage;
