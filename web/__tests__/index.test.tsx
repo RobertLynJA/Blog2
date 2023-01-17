@@ -3,7 +3,7 @@ import Home from '@/pages/index'
 
 describe('Home', () => {
   it('renders a heading', () => {
-    render(<Home test={[]} error={'hi'} />)
+    render(<Home stories={[]} />)
 
     const heading = screen.getByRole('heading', {
       name: /hello from next\.js and tailwind/i,
