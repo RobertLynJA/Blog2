@@ -5,10 +5,8 @@ import { NextPage, GetServerSideProps } from "next";
 import { getStoriesByDate, Story } from "../store/StoriesStore";
 import StorySummary from "@/components/Stories/StorySummary";
 
-
 interface Props {
   stories: Story[];
-  error: string | null;
 }
 
 const Home: NextPage<Props> = (props) => {
@@ -25,13 +23,11 @@ const Home: NextPage<Props> = (props) => {
           <a href="https://tailwindcss.com/">Tailwind</a>
         </h1>
 
-        <h2>Ignore random test data:</h2>
         <div>
           {props.stories?.map((item) => (
-            <StorySummary story={item} key={item.id} />            
+            <StorySummary story={item} key={item.id} />
           ))}
         </div>
-        <div>{props.error}</div>
       </main>
 
       <footer></footer>
@@ -42,21 +38,12 @@ const Home: NextPage<Props> = (props) => {
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
-  try {
-    return {
-      props: {
-        stories: await getStoriesByDate(0, 20),
-        error: null,
-      },
-    };
-  } catch (error: any) {
-    return {
-      props: {
-        stories: [],
-        error: error.message,
-      },
-    };
-  }
+  return {
+    props: {
+      stories: await getStoriesByDate(0, 20),
+      error: null,
+    },
+  };
 };
 
 export default Home;
