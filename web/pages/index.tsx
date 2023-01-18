@@ -9,6 +9,17 @@ interface Props {
   stories: Story[];
 }
 
+export const getServerSideProps: GetServerSideProps<Props> = async (
+  context
+) => {
+  return {
+    props: {
+      stories: await getStoriesByDate(0, 20),
+      error: null,
+    },
+  };
+};
+
 const Home: NextPage<Props> = (props) => {
   return (
     <div>
@@ -23,17 +34,6 @@ const Home: NextPage<Props> = (props) => {
       <footer></footer>
     </div>
   );
-};
-
-export const getServerSideProps: GetServerSideProps<Props> = async (
-  context
-) => {
-  return {
-    props: {
-      stories: await getStoriesByDate(0, 20),
-      error: null,
-    },
-  };
 };
 
 export default Home;
