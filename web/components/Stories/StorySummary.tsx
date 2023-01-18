@@ -11,7 +11,7 @@ interface Props {
 
 const StorySummary: FunctionComponent<Props> = (props) => {
   return (
-    <div className={props.className}>
+    <div className={`bg-secondary p-5 my-2.5 rounded-lg ${props.className}`}>
       <div>
         <Link
           href={`/stories/${encodeURIComponent(props.story.id)}`}

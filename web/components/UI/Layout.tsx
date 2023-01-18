@@ -8,7 +8,7 @@ interface Props {
 
 const Layout: FunctionComponent<Props> = (props) => {
   return (
-    <div className="container mx-auto px-8 py-8">
+    <div className="container mx-auto px-8 py-8 bg-primary">
       <Head>
         <title>RobertLynJA.com</title>
         <link rel="icon" href="/favicon.ico" />
