@@ -6,6 +6,7 @@ import classes from "./StoryContent.module.css";
 interface Props {
   content: string;
   encoding: string;
+  className?: string;
 }
 
 const StoryContent: FunctionComponent<Props> = (props) => {
@@ -14,16 +15,16 @@ const StoryContent: FunctionComponent<Props> = (props) => {
   switch (props.encoding) {
     case "markdown":
       content = (
-        <div className={classes.markdownContent}>
+        <div className={`${classes.markdownContent} ${props.className}`}>
           <ReactMarkdown children={props.content} />
         </div>
       );
       break;
     case "text":
-      content = <div>{props.content}</div>;
+      content = <div className={props.className}>{props.content}</div>;
       break;
     default:
-      content = <>Unknown format</>;
+      content = <div className={props.className}>Unknown format</div>;
       break;
   }
 
