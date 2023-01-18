@@ -5,17 +5,18 @@ import StoryContent from "./StoryContent";
 
 interface Props {
   story: Story;
+  className?: string;
 }
 
 const StoryFull: FunctionComponent<Props> = (props) => {
   return (
-    <div>
-      <div className="text-xl">{props.story.title}</div>
-      <StoryContent
+    <div className={props.className}>
+      <div className="text-xl font-medium">{props.story.title}</div>
+      <StoryContent className="pt-4 pb-2"
         content={props.story.content}
         encoding={props.story.encoding}
       />
-      <div className="text-sm">
+      <div className="text-sm font-light">
         {new Date(props.story.publishedDate).toUTCString()}
       </div>
     </div>
