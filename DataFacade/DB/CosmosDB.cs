@@ -8,50 +8,49 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataFacade.DB
+namespace DataFacade.DB;
+
+public class CosmosDB : IDisposable
 {
-    public class CosmosDB : IDisposable
+    private readonly CosmosClient _client;
+    private readonly string _connectionString;
+    private readonly ILogger<CosmosDB> _logger;
+
+    public CosmosDB(ILogger<CosmosDB> logger, string connectionString)
     {
-        private readonly CosmosClient _client;
-        private readonly string _connectionString;
-        private readonly ILogger<CosmosDB> _logger;
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-        public CosmosDB(ILogger<CosmosDB> logger, string connectionString)
+        if (connectionString == null || connectionString.Length == 0)
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-
-            if (connectionString == null || connectionString.Length == 0)
-            {
-                throw new ArgumentNullException(nameof(connectionString));
-            }
-
-            _connectionString = connectionString;
-            _client = CreateDBInstance();
-
-            _logger.LogInformation($"{nameof(StoriesDataSource)}()");
+            throw new ArgumentNullException(nameof(connectionString));
         }
 
-        private CosmosClient CreateDBInstance()
-        {
-            return new(_connectionString, new CosmosClientOptions()
-            {
-                SerializerOptions = new CosmosSerializationOptions()
-                {
-                    PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase,
-                }
-            });
-        }
+        _connectionString = connectionString;
+        _client = CreateDBInstance();
 
-        private Database GetDatabase() => _client.GetDatabase("Blog");
-
-        public Container StoriesContainer
-        {
-            get
-            {
-                return GetDatabase().GetContainer("stories");
-            }
-        }
-
-        public void Dispose() => _client?.Dispose();
+        _logger.LogInformation($"{nameof(StoriesDataSource)}()");
     }
+
+    private CosmosClient CreateDBInstance()
+    {
+        return new(_connectionString, new CosmosClientOptions()
+        {
+            SerializerOptions = new CosmosSerializationOptions()
+            {
+                PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase,
+            }
+        });
+    }
+
+    private Database GetDatabase() => _client.GetDatabase("Blog");
+
+    public Container StoriesContainer
+    {
+        get
+        {
+            return GetDatabase().GetContainer("stories");
+        }
+    }
+
+    public void Dispose() => _client?.Dispose();
 }
