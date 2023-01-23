@@ -8,19 +8,19 @@
     "test:ci": "jest --ci"
   },
   "dependencies": {
-    "axios": "^1.2.2",
-    "next": "^13.1.2",
+    "axios": "^1.2.3",
+    "next": "^13.1.5",
     "react": "^18.1.0",
     "react-cookie-consent": "^8.0.1",
     "react-dom": "^18.1.0",
-    "react-markdown": "^8.0.4",
-    "swr": "^2.0.0"
+    "react-markdown": "^8.0.5",
+    "swr": "^2.0.1"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "5.16.5",
     "@testing-library/react": "13.4.0",
     "@testing-library/user-event": "14.4.3",
-    "@types/react": "18.0.26",
+    "@types/react": "18.0.27",
     "autoprefixer": "^10.4.13",
     "babel-jest": "29.3.1",
     "identity-obj-proxy": "3.0.0",
