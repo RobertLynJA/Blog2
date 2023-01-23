@@ -1,13 +1,12 @@
 ﻿using API.Controllers;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Api.Tests.Controllers
+namespace Api.Tests.Controllers;
+
+public class StoriesControllerTests
 {
-    public class StoriesControllerTests
+    [Fact]
+    public void Test1()
     {
-        [Fact]
-        public void Test1()
-        {
-        }
     }
 }

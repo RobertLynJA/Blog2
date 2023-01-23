@@ -1,5 +1,8 @@
-﻿using AutoMapper;
+﻿using API.Models.Stories;
+using AutoMapper;
 using DataFacade.DataSource.Interfaces;
+using DataFacade.Messages.Stories;
+using MediatR;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
@@ -13,25 +16,25 @@ namespace API.Controllers
     public class StoriesController : ControllerBase
     {
         private readonly ILogger<StoriesController> _logger;
-        private readonly IStoriesDataSource _storiesDataSource;
         private readonly IMapper _mapper;
+        private readonly IMediator _mediator;
 
-        public StoriesController(ILogger<StoriesController> logger, IStoriesDataSource storiesDataSource, IMapper mapper)
+        public StoriesController(ILogger<StoriesController> logger, IMapper mapper, IMediator mediator)
         {
             _logger = logger;
-            _storiesDataSource = storiesDataSource;
             _mapper = mapper;
+            _mediator = mediator;
         }
 
         // GET <StoriesController>
         [HttpGet("ByDate")]
         [ProducesResponseType(typeof(Models.Stories.Story), StatusCodes.Status200OK)]
         [ResponseCache(CacheProfileName = "10MinutesPublic")]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(CancellationToken cancellationToken)
         {
             try
             {
-                var stories = await _storiesDataSource.GetStoriesByDateAsync(0, 10);
+                var stories = await _mediator.Send(new GetStoriesByDate(0, 10), cancellationToken);
                 var result = _mapper.Map<IEnumerable<Models.Stories.Story>>(stories);
 
                 return Ok(result);
@@ -47,11 +50,16 @@ namespace API.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(Models.Stories.Story), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Get(string id)
+        public async Task<IActionResult> Get(string id, CancellationToken cancellationToken)
         {
             try
             {
-                var story = await _storiesDataSource.GetStoryAsync(id);
+                if (string.IsNullOrEmpty(id))
+                {
+                    return NotFound();
+                }
+
+                var story = await _mediator.Send(new GetStoryByID(id));
 
                 if (story == null)
                 {

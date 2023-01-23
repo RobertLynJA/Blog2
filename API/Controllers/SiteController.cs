@@ -1,16 +1,15 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API.Controllers
+namespace API.Controllers;
+
+[Route("/")]
+[ApiController]
+public class SiteController : ControllerBase
 {
-    [Route("/")]
-    [ApiController]
-    public class SiteController : ControllerBase
+    [HttpGet]
+    public string GetHelloMessage()
     {
-        [HttpGet]
-        public string GetHelloMessage()
-        {
-            return "Hello, I'm working :)";
-        }
+        return "Hello, I'm working :)";
     }
 }
