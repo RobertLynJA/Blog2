@@ -6,14 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataFacade.Messages.Stories;
+namespace DataFacade.Commands.Stories;
 
-public class GetStoriesByDate : IRequest<IReadOnlyList<Story>>
+public class GetStoriesByDateCommand : IRequest<IReadOnlyList<Story>>
 {
     public int Page { get; }
     public int NumberRows { get; }
 
-    public GetStoriesByDate(int page, int numberRows) 
+    public GetStoriesByDateCommand(int page, int numberRows) 
     { 
         Page = page;
         NumberRows = numberRows;

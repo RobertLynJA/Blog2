@@ -7,13 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataFacade.Messages.Stories;
+namespace DataFacade.Commands.Stories;
 
-public class GetStoryByID : IRequest<Story?>
+public class GetStoryByIDCommand : IRequest<Story?>
 {
     public string StoryID { get; }
     
-    public GetStoryByID(string storyID)
+    public GetStoryByIDCommand(string storyID)
     {
         StoryID = storyID ?? throw new ArgumentNullException(storyID);
     }

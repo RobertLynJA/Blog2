@@ -1,13 +1,9 @@
-﻿using API.Models.Stories;
-using AutoMapper;
-using DataFacade.DataSource.Interfaces;
-using DataFacade.Messages.Stories;
+﻿using AutoMapper;
+using DataFacade.Commands.Stories;
 using MediatR;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace API.Controllers
 {
@@ -34,7 +30,7 @@ namespace API.Controllers
         {
             try
             {
-                var stories = await _mediator.Send(new GetStoriesByDate(0, 10), cancellationToken);
+                var stories = await _mediator.Send(new GetStoriesByDateCommand(0, 10), cancellationToken);
                 var result = _mapper.Map<IEnumerable<Models.Stories.Story>>(stories);
 
                 return Ok(result);
@@ -59,7 +55,7 @@ namespace API.Controllers
                     return NotFound();
                 }
 
-                var story = await _mediator.Send(new GetStoryByID(id));
+                var story = await _mediator.Send(new GetStoryByIDCommand(id));
 
                 if (story == null)
                 {
