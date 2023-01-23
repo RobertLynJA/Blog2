@@ -1,4 +1,6 @@
 ﻿using API.Models;
+using MediatR;
+using System.Reflection;
 
 namespace API
 {
@@ -51,6 +53,9 @@ namespace API
 
             services.AddOutputCache();
             services.AddAutoMapper(typeof(StoriesProfile));
+
+            services.AddMediatR(Assembly.Load(nameof(DataFacade)));
+            //services.AddMediatR(Assembly.GetExecutingAssembly());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
