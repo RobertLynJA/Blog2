@@ -1,5 +1,7 @@
 ﻿using API.Models;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Logging;
 using System.Reflection;
 
 namespace API
@@ -51,11 +53,31 @@ namespace API
                                   });
             });
 
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = Configuration["Auth0:Authority"];
+                options.Audience = Configuration["Auth0:Audience"];
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admin", policy =>
+                      policy.RequireAssertion(context =>
+                          context.User.HasClaim(c =>
+                              (c.Type == "permissions" &&
+                              c.Value == "write:stories") &&
+                              c.Issuer == $"https://{Configuration["Auth0:Authority"]}/")));
+            }
+            );
+
             services.AddOutputCache();
             services.AddAutoMapper(typeof(StoriesProfile));
 
             services.AddMediatR(Assembly.Load(nameof(DataFacade)));
-            //services.AddMediatR(Assembly.GetExecutingAssembly());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,6 +92,7 @@ namespace API
             app.UseRouting();
 
             app.UseCors(MyAllowSpecificOrigins);
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseDefaultFiles();
