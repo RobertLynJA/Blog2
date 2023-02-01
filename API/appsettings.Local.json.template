@@ -2,5 +2,9 @@
   "ConnectionStrings": {
     "DefaultConnection": "",
     "CosmosConnection": ""
+  },
+  "Auth0": {
+    "Authority": "",
+    "Audience": ""
   }
 }
