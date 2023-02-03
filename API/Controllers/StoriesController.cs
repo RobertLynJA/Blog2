@@ -23,7 +23,7 @@ namespace API.Controllers
         }
 
         // GET <StoriesController>
-        [HttpGet("ByDate")]
+        [HttpGet()]
         [ProducesResponseType(typeof(Models.Stories.Story), StatusCodes.Status200OK)]
         [ResponseCache(CacheProfileName = "10MinutesPublic")]
         public async Task<IActionResult> Get(CancellationToken cancellationToken)
