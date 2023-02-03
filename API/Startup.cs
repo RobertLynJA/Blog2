@@ -2,7 +2,9 @@
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
+using System.Security.Claims;
 
 namespace API
 {
@@ -61,6 +63,11 @@ namespace API
             {
                 options.Authority = Configuration["Auth0:Authority"];
                 options.Audience = Configuration["Auth0:Audience"];
+
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    NameClaimType = ClaimTypes.NameIdentifier
+                };
             });
 
             services.AddAuthorization(options =>
@@ -70,7 +77,7 @@ namespace API
                           context.User.HasClaim(c =>
                               (c.Type == "permissions" &&
                               c.Value == "write:stories") &&
-                              c.Issuer == $"https://{Configuration["Auth0:Authority"]}/")));
+                              c.Issuer == $"{Configuration["Auth0:Authority"]}")));
             }
             );
 
