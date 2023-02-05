@@ -5,55 +5,54 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace DataFacade.Models.Stories
+namespace DataFacade.Models.Stories;
+
+public class Story
 {
-    public class Story
+    private string _id = string.Empty;
+    [JsonRequired]
+    public string ID
     {
-        private string _id = string.Empty;
-        [JsonRequired]
-        public string ID
-        {
-            get => _id;
-            set => _id = value ?? throw new ArgumentNullException(nameof(ID));
-        }
+        get => _id;
+        set => _id = value ?? throw new ArgumentNullException(nameof(ID));
+    }
 
-        private string _title = string.Empty;
-        public string Title
-        {
-            get => _title;
-            set => _title = value ?? throw new ArgumentNullException(nameof(Title));
-        }
+    private string _title = string.Empty;
+    public string Title
+    {
+        get => _title;
+        set => _title = value ?? throw new ArgumentNullException(nameof(Title));
+    }
 
-        private string _content = string.Empty;
-        public string Content
-        {
-            get => _content;
-            set => _content = value ?? throw new ArgumentNullException(nameof(Content));
-        }
+    private string _content = string.Empty;
+    public string Content
+    {
+        get => _content;
+        set => _content = value ?? throw new ArgumentNullException(nameof(Content));
+    }
 
-        private DateTime _publishedDate = DateTime.UtcNow;
-        public DateTime PublishedDate
+    private DateTime _publishedDate = DateTime.UtcNow;
+    public DateTime PublishedDate
+    {
+        get => _publishedDate;
+        set
         {
-            get => _publishedDate;
-            set
-            {
-                _publishedDate = value;
-                _partitionKey = _publishedDate.Year.ToString();
-            }
+            _publishedDate = value;
+            _partitionKey = _publishedDate.Year.ToString();
         }
+    }
 
-        public string _encoding = "markdown";
-        public string Encoding
-        {
-            get => _encoding;
-            set => _encoding = value ?? throw new ArgumentNullException(nameof(Encoding));
-        }
+    public string _encoding = "markdown";
+    public string Encoding
+    {
+        get => _encoding;
+        set => _encoding = value ?? throw new ArgumentNullException(nameof(Encoding));
+    }
 
-        private string _partitionKey = DateTime.UtcNow.Year.ToString();
-        public string PartitionKey
-        {
-            get => _partitionKey;
-            set => _partitionKey = value ?? throw new ArgumentNullException(nameof(PartitionKey));
-        }
+    private string _partitionKey = DateTime.UtcNow.Year.ToString();
+    public string PartitionKey
+    {
+        get => _partitionKey;
+        set => _partitionKey = value ?? throw new ArgumentNullException(nameof(PartitionKey));
     }
 }
