@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using RestSharp;
 using System.Reflection;
 using System.Security.Claims;
 
@@ -61,8 +62,8 @@ namespace API
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options =>
             {
-                options.Authority = Configuration["Auth0:Authority"];
-                options.Audience = Configuration["Auth0:Audience"];
+                options.Authority = Configuration["Auth0Settings:Authority"];
+                options.Audience = Configuration["Auth0Settings:Audience"];
 
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -83,6 +84,8 @@ namespace API
 
             services.AddOutputCache();
             services.AddAutoMapper(typeof(StoriesProfile));
+
+            services.AddSingleton<RestClient>();
 
             services.AddMediatR(Assembly.Load(nameof(DataFacade)));
         }
