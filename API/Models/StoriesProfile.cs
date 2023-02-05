@@ -1,13 +1,12 @@
 ﻿using AutoMapper;
 using DataFacade.Models.Stories;
 
-namespace API.Models
+namespace API.Models;
+
+public class StoriesProfile : Profile
 {
-    public class StoriesProfile : Profile
-    {
-        public StoriesProfile() 
-        { 
-            CreateMap<Story, Models.Stories.Story>();
-        }
+    public StoriesProfile() 
+    { 
+        CreateMap<Story, Models.Stories.Story>();
     }
 }
