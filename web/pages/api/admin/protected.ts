@@ -12,6 +12,7 @@ export default withApiAuthRequired(async function myApiRoute(req, res) {
   const getUser = await testUser(accessToken!);
   const getAdmin = await testAdmin(accessToken!);
 
-  const { user } = await getSession(req, res);
-  res.json({ protected: 'My Secret', id: user.sub, user: getUser, admin: getAdmin});
+  const session = await getSession(req, res);
+
+  res.json({ protected: 'My Secret', id: session?.user.sub, user: getUser, admin: getAdmin});
 });
