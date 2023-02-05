@@ -2,6 +2,8 @@
 
 public sealed class Auth0Options
 {
+    public const string Position = "Auth0";
+
     public string? Authority { get; set; }
     public string? Audience { get; set; }
     public string? APIClientID { get; set; }

@@ -3,7 +3,7 @@
     "DefaultConnection": "",
     "CosmosConnection": ""
   },
-  "Auth0Settings": {
+  "Auth0": {
     "Authority": "",
     "Audience": "",
     "APIClientID": "",
