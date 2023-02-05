@@ -3,7 +3,7 @@
     "DefaultConnection": "",
     "CosmosConnection": ""
   },
-  "Auth0": {
+  "Auth0Settings": {
     "Authority": "",
     "Audience": ""
   }
