@@ -87,6 +87,12 @@ public class Program
         builder.Services.AddSingleton<RestClient>();
         builder.Services.AddMediatR(Assembly.Load(nameof(DataFacade)));
 
+        builder.Services.Configure<Data.Configuration.ConnectionStringsOptions>(
+            builder.Configuration.GetSection(Data.Configuration.ConnectionStringsOptions.Position));
+
+        builder.Services.Configure<Data.Configuration.Auth0Options>(
+            builder.Configuration.GetSection(Data.Configuration.Auth0Options.Position));
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.

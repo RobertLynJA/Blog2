@@ -32,7 +32,7 @@ public class StoriesDataSource : IStoriesDataSource
         throw new NotImplementedException();
     }
 
-    public async Task<IReadOnlyList<Story>> GetStoriesByDateAsync(int page, int numberRows, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Story>> GetStoriesByDateAsync(int page, int numberRows, CancellationToken cancellationToken = default)
     {
         var queryable = _db.StoriesContainer.GetItemLinqQueryable<Story>();
 
@@ -58,7 +58,7 @@ public class StoriesDataSource : IStoriesDataSource
         return stories;
     }
 
-    public async Task<Story?> GetStoryAsync(string storyId, CancellationToken cancellationToken)
+    public async Task<Story?> GetStoryAsync(string storyId, CancellationToken cancellationToken = default)
     {
         if (storyId == null)
         {
