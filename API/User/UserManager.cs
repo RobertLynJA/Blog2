@@ -27,7 +27,7 @@ public class UserManager : Interfaces.IUserManager
         _auth0Options = auth0Options?.Value ?? throw new ArgumentNullException(nameof(auth0Options));
     }
 
-    public async Task<Auth0User?> GetCurrentUserAsync(CancellationToken cancellationToken)
+    public async Task<Auth0User?> GetCurrentUserAsync(CancellationToken cancellationToken = default)
     {
         if (_httpContextAccessor.HttpContext?.User?.Identity?.Name == null)
         {
@@ -45,15 +45,15 @@ public class UserManager : Interfaces.IUserManager
             grant_type = _auth0Options.APIGrantType
         };
 
-        var authTokenRequest = new RestRequest($"{_auth0Options.APIRootURL}/oauth/token")
+        var authTokenRequest = new RestRequest($"{_auth0Options.APIRootURL ?? throw new ArgumentNullException(nameof(_auth0Options.APIRootURL))}/oauth/token")
             .AddJsonBody(body);
 
         var authToken = await _restClient.PostAsync<Data.Auth0.Auth0Token>(authTokenRequest, cancellationToken);
 
         var userRequest = new RestRequest($"{_auth0Options.APIRootURL}/api/v2/users/{WebUtility.UrlEncode(userID)}")
-            .AddHeader("authorization", $"Bearer {authToken?.AccessToken}");
+            .AddHeader("authorization", $"Bearer {authToken?.AccessToken ?? throw new ArgumentNullException(nameof(authToken.AccessToken))}");
 
-        var user = await _restClient.GetAsync<Data.Auth0.Auth0User>(userRequest);
+        var user = await _restClient.GetAsync<Data.Auth0.Auth0User>(userRequest, cancellationToken);
 
         return user;
     }

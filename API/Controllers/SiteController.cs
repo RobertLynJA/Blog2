@@ -10,9 +10,9 @@ namespace API.Controllers;
 [ApiController]
 public class SiteController : ControllerBase
 {
-    private readonly ILogger<StoriesController> _logger;
+    private readonly ILogger<SiteController> _logger;
 
-    public SiteController(ILogger<StoriesController> logger)
+    public SiteController(ILogger<SiteController> logger)
     {
         _logger = logger;
     }
