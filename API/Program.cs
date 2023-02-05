@@ -18,6 +18,17 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         var configuration = builder.Configuration;
 
+        new string[] {
+            "ConnectionStrings:CosmosConnection",
+            "Auth0:Authority",
+            "Auth0:Audience",
+            "Auth0:APIClientID",
+            "Auth0:APIClientSecret",
+            "Auth0:APIAudience",
+            "Auth0:APIGrantType",
+            "Auth0:APIRootURL"
+        }.ToList().ForEach(c => HandleMissingConfig(configuration, c));
+
         // Add services to the container.
 
         builder.Services.AddControllers(options =>
@@ -62,8 +73,8 @@ public class Program
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         }).AddJwtBearer(options =>
         {
-            options.Authority = configuration["Auth0Settings:Authority"];
-            options.Audience = configuration["Auth0Settings:Audience"];
+            options.Authority = configuration["Auth0:Authority"];
+            options.Audience = configuration["Auth0:Audience"];
 
             options.TokenValidationParameters = new TokenValidationParameters
             {
@@ -115,5 +126,13 @@ public class Program
         app.MapControllers();
 
         app.Run();
+    }
+
+    private static void HandleMissingConfig(Microsoft.Extensions.Configuration.ConfigurationManager configuration, string key)
+    {
+        if (string.IsNullOrWhiteSpace(configuration[key]))
+        {
+            throw new ConfigurationErrorsException($"{key} configuration is not set");
+        }
     }
 }
