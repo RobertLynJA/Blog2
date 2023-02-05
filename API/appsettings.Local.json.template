@@ -5,6 +5,11 @@
   },
   "Auth0Settings": {
     "Authority": "",
-    "Audience": ""
+    "Audience": "",
+    "APIClientID": "",
+    "APIClientSecret": "",
+    "APIAudience": "",
+    "APIGrantType": "",
+    "APIRootURL": ""
   }
 }
