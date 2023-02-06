@@ -9,8 +9,10 @@ interface Props {
 }
 
 const StoryFull: FunctionComponent<Props> = (props) => {
+  const className = props.className || "";
+
   return (
-    <div className={`bg-secondary p-5 my-2.5 rounded-lg ${props.className}`}>
+    <div className={`bg-secondary p-5 my-2.5 rounded-lg ${className}`}>
       <div className="text-xl font-medium">{props.story.title}</div>
       <StoryContent className="pt-4 pb-2"
         content={props.story.content}
