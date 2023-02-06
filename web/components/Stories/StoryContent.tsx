@@ -11,20 +11,21 @@ interface Props {
 
 const StoryContent: FunctionComponent<Props> = (props) => {
   let content: JSX.Element;
+  const className = props.className || "";
 
   switch (props.encoding) {
     case "markdown":
       content = (
-        <div className={`${classes.markdownContent} ${props.className}`}>
+        <div className={`${classes.markdownContent} ${className}`}>
           <ReactMarkdown children={props.content} />
         </div>
       );
       break;
     case "text":
-      content = <div className={props.className}>{props.content}</div>;
+      content = <div className={className}>{props.content}</div>;
       break;
     default:
-      content = <div className={props.className}>Unknown format</div>;
+      content = <div className={className}>Unknown format</div>;
       break;
   }
 
