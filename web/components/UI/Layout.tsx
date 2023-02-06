@@ -4,11 +4,14 @@ import CookieConsent from "react-cookie-consent";
 
 interface Props {
   children: ReactNode;
+  className?: string;
 }
 
 const Layout: FunctionComponent<Props> = (props) => {
+  const className = props.className || "";
+
   return (
-    <div className="container mx-auto px-8 py-8">
+    <div className={`container mx-auto px-8 py-8 ${className}`}>
       <Head>
         <title>RobertLynJA.com</title>
         <link rel="icon" href="/favicon.ico" />
