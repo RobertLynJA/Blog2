@@ -16,6 +16,7 @@ env:
   NODE_VERSION: '18.x'
   WEB_WORKING_DIRECTORY: './web'
   AZURE_API_WEBAPP_NAME: 'RobertLynJA'
+  DOTNET_VERSION: '7.0.x'
 
 jobs:
 
@@ -101,10 +102,10 @@ jobs:
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-node-          
-    - name: Setup .NET
+    - name: Setup .NET ${{ env.DOTNET_VERSION }}
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 7.0.x
+        dotnet-version: ${{ env.DOTNET_VERSION }}
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
