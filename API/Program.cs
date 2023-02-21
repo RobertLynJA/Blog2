@@ -96,7 +96,9 @@ public class Program
         builder.Services.AddOutputCache();
         builder.Services.AddAutoMapper(typeof(StoriesProfile));
         builder.Services.AddSingleton<RestClient>();
-        builder.Services.AddMediatR(Assembly.Load(nameof(DataFacade)));
+        builder.Services.AddMediatR(cfg => {
+            cfg.RegisterServicesFromAssemblies(Assembly.Load(nameof(DataFacade)));
+        });
 
         builder.Services.Configure<Data.Configuration.ConnectionStringsOptions>(
             builder.Configuration.GetSection(Data.Configuration.ConnectionStringsOptions.Position));
