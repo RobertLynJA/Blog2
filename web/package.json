@@ -8,7 +8,7 @@
     "test:ci": "jest --ci"
   },
   "dependencies": {
-    "@auth0/nextjs-auth0": "^2.2.2",
+    "@auth0/nextjs-auth0": "^2.5.0",
     "axios": "^1.4.0",
     "next": "^13.2.3",
     "react": "^18.1.0",
