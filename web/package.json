@@ -15,7 +15,7 @@
     "react-cookie-consent": "^8.0.1",
     "react-dom": "^18.1.0",
     "react-markdown": "^8.0.7",
-    "swr": "^2.1.2"
+    "swr": "^2.1.5"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "5.16.5",
