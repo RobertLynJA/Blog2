@@ -1,5 +1,5 @@
 name: Build
-concurrency: deploy
+#concurrency: deploy
 
 on: 
   push:
