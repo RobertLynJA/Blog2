@@ -8,7 +8,7 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["API/API.csproj", "API/"]
 COPY ["API.Tests/API.Tests.csproj", "API/"]
-COPY ["DataFacade/API.csproj", "API/"]
+COPY ["DataFacade/DataFacade.csproj", "API/"]
 COPY ["DataFacade.Tests/DataFacade.Tests.csproj", "API/"]
 RUN dotnet restore "API/API.csproj"
 COPY . .
