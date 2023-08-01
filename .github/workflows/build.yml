@@ -2,14 +2,8 @@ name: Build
 #concurrency: deploy
 
 on: 
-  push:
-    branches:
-      - "main"
-      - "release"
-  pull_request:
-    branches:
-      - "main"
-
+  push
+  
 env:
   AZURE_NEXTJS_WEBAPP_NAME: 'robertlynjaweb'   
   AZURE_WEBAPP_PACKAGE_PATH: './'         
@@ -23,132 +17,49 @@ jobs:
   build-web:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ env.NODE_VERSION }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ env.NODE_VERSION }}
-        cache: 'npm'
-        cache-dependency-path: './web/package-lock.json'
-    - name: Cache NextJS
-      uses: actions/cache@v3
-      with:
-        # See here for caching with `yarn` https://github.com/actions/cache/blob/main/examples.md#node---yarn or you can leverage caching with actions/setup-node https://github.com/actions/setup-node
-        path: |
-          ~/.npm
-          ${{ github.workspace }}/web/.next/cache
-        # Generate a new cache whenever packages or source files change.
-        key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
-        # If source files changed but packages didn't, rebuild from a prior cache.
-        restore-keys: |
-          ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-        
-    - name: npm install, build, and test 
-      run: |
-        # Build and test the project, then
-        # deploy to Azure Web App.
-        npm install
-        npm run build --if-present
-        npm run test:ci --if-present
-      working-directory: ${{ env.WEB_WORKING_DIRECTORY }}
-    - name: Move static folders into dynamic folder
-      run: |
-        cp -r ./public ./.next/standalone                     
-        cp -r ./.next/static ./.next/standalone/.next/static
-        rm ./.next/standalone/package.json #Remove package.json to force the server to use server.js
-      working-directory: ${{ env.WEB_WORKING_DIRECTORY }}
-    - name: Upload artifact for deployment job
-      uses: actions/upload-artifact@v3
-      with:
-        name: nextjs
-        path: ./web/.next/standalone
+      - uses: actions/checkout@v3
 
-  deploy-web:
-    needs: [build-web, build-api]
-    runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' }}
-    
-    environment:
-      name: Production
-      url: https://www.robertlynja.com        
-      
-    steps:      
-    - name: Download a Build Artifact
-      uses: actions/download-artifact@v3
-      with:
-        name: nextjs
-    - name: 'Deploy to Azure WebApp'
-      uses: azure/webapps-deploy@v2
-      with: 
-        app-name: ${{ env.AZURE_NEXTJS_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.AZURE_NEXTJS_PUBLISH_PROFILE }}
-        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to GitHub container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Lowercase the repo name
+        run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
+
+      - name: Build and push container image to registry
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: ghcr.io/${{ env.REPO }}:${{ github.sha }}
+          file: ./web/Dockerfile
 
   build-api:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Cache Nuget
-      id: cache-nuget
-      uses: actions/cache@v3
-      with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-  
-    - name: Cache npm dependencies
-      uses: actions/cache@v3
-      with:
-        path: '~/.npm'
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-          
-    - name: Setup .NET ${{ env.DOTNET_VERSION }}
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build -c Release --no-restore
-    - name: Test
-      run: |
-        dotnet test --logger trx --results-directory "TestResults" 
-    - name: Upload dotnet test results
-      uses: actions/upload-artifact@v3
-      with:
-        name: dotnet-results
-        path: TestResults
-      # Use always() to always run this step to publish test results when there are test failures
-      if: ${{ always() }}        
-    - name: Publish
-      run: |
-        dotnet publish ./API/API.csproj  -c Release -o ./release --os linux       
-    - name: Upload a Build Artifact (.Net)
-      uses: actions/upload-artifact@v3
-      with:
-        name: api
-        path: ./release/**
-        if-no-files-found: error
-
-  deploy-api-service:
-    needs: [build-web, build-api]
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' }}
-    environment:
-      name: Production
-      url: https://api.robertlynja.com
-      
     steps:
-    - name: Download a Build Artifact (.Net)
-      uses: actions/download-artifact@v3
-      with:
-        name: api
-        path: website
-    # Deploy to Azure Web apps
-    - name: 'Run Azure webapp deploy action using publish profile credentials'
-      uses: azure/webapps-deploy@v2.2.5
-      with: 
-        app-name: ${{ env.AZURE_API_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE  }}
-        package: './website'
-        
+      - uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to GitHub container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Lowercase the repo name
+        run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
+
+      - name: Build and push container image to registry
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: ghcr.io/${{ env.REPO }}:${{ github.sha }}
+          file: ./API/Dockerfile
