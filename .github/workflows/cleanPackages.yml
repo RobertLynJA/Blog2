@@ -6,16 +6,16 @@ on:
     - cron: "0 23 * * *" 
 
 jobs:
-  clean-logs:
+  clean-packages:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/delete-package-versions@v4
         with: 
-          package-name: 'blog-api'
+          package-name: 'blog2-api'
           package-type: 'container'
           min-versions-to-keep: 2
       - uses: actions/delete-package-versions@v4
         with: 
-          package-name: 'blog-web'
+          package-name: 'blog2-web'
           package-type: 'container'
           min-versions-to-keep: 2
