@@ -1,9 +1,9 @@
-name: Clean Workflow Logs
+name: Clean Packages
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 22 * * *" 
+    - cron: "0 23 * * *" 
 
 jobs:
   clean-logs:
