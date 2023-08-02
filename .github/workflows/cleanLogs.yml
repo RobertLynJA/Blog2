@@ -13,18 +13,3 @@ jobs:
         with:
           days_old: "14" # optional, default value: "7"
           token: ${{ github.token }}
-      - uses: actions/delete-package-versions@v4
-        with: 
-          package-name: 'blog-api'
-          package-type: 'container'
-          min-versions-to-keep: 2
-      - uses: actions/delete-package-versions@v4
-        with: 
-          package-name: 'blog-web'
-          package-type: 'container'
-          min-versions-to-keep: 2
-      - uses: actions/delete-package-versions@v4
-        with: 
-          package-name: 'blog'
-          package-type: 'container'
-          min-versions-to-keep: 0
