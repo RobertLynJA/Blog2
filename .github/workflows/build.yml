@@ -36,7 +36,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: ghcr.io/${{ env.REPO }}-WEB:${{ github.sha }}
+          tags: ghcr.io/${{ env.REPO }}-web:${{ github.sha }}
           file: ./web/Dockerfile
 
   build-api:
@@ -61,7 +61,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: ghcr.io/${{ env.REPO }}-API:${{ github.sha }}
+          tags: ghcr.io/${{ env.REPO }}-api:${{ github.sha }}
           file: ./API/Dockerfile
 
   deploy-api:
@@ -83,4 +83,4 @@ jobs:
         with:
           app-name: ${{ env.AZURE_API_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_D }}
-          images: 'ghcr.io/${{ env.REPO }}-API:${{ github.sha }}'
+          images: 'ghcr.io/${{ env.REPO }}-api:${{ github.sha }}'
