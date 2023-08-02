@@ -1,0 +1,21 @@
+name: Clean Workflow Logs
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 22 * * *" 
+
+jobs:
+  clean-logs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/delete-package-versions@v4
+        with: 
+          package-name: 'blog-api'
+          package-type: 'container'
+          min-versions-to-keep: 2
+      - uses: actions/delete-package-versions@v4
+        with: 
+          package-name: 'blog-web'
+          package-type: 'container'
+          min-versions-to-keep: 2
