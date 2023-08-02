@@ -5,12 +5,10 @@ on:
   push
   
 env:
-  AZURE_NEXTJS_WEBAPP_NAME: 'robertlynjaweb'   
+  AZURE_NEXTJS_WEBAPP_NAME: 'RobertLynJANext'   
   AZURE_WEBAPP_PACKAGE_PATH: './'         
-  NODE_VERSION: '18.x'
   WEB_WORKING_DIRECTORY: './web'
   AZURE_API_WEBAPP_NAME: 'RobertLynJAApi'
-  DOTNET_VERSION: '7.0.x'
 
 jobs:
 
@@ -38,7 +36,28 @@ jobs:
           push: true
           tags: ghcr.io/${{ env.REPO }}-web:${{ github.sha }}
           file: ./web/Dockerfile
+          
+  deploy-web:
+    runs-on: ubuntu-latest
 
+    needs: build-api
+
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+      - name: Lowercase the repo name
+        run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@85270a1854658d167ab239bce43949edb336fa7c
+        with:
+          app-name: ${{ env.AZURE_NEXTJS_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_NEXTJS_PUBLISH_PROFILE_D }}
+          images: 'ghcr.io/${{ env.REPO }}-web:${{ github.sha }}'
+          
   build-api:
     runs-on: ubuntu-latest
     steps:
@@ -82,5 +101,5 @@ jobs:
         uses: azure/webapps-deploy@85270a1854658d167ab239bce43949edb336fa7c
         with:
           app-name: ${{ env.AZURE_API_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_D }}
+          publish-profile: ${{ secrets.AZURE_API_PUBLISH_PROFILE_D }}
           images: 'ghcr.io/${{ env.REPO }}-api:${{ github.sha }}'
