@@ -13,8 +13,8 @@ public class GetStoryByIDCommandHandlerTests
     public async void GetStoryByID_InvalidID_ReturnsNull()
     {
         //Arrange
-        var logger = Substitute.For<ILogger<GetStoryByIDCommandHandler>>(); // new Mock<ILogger<GetStoryByIDCommandHandler>>();
-        var dataSource = Substitute.For<IStoriesDataSource>(); // new Mock<IStoriesDataSource>();
+        var logger = Substitute.For<ILogger<GetStoryByIDCommandHandler>>();
+        var dataSource = Substitute.For<IStoriesDataSource>();
 
         var command = new GetStoryByIDCommand("invalidID");
         var handler = new GetStoryByIDCommandHandler(logger, dataSource);
@@ -30,10 +30,9 @@ public class GetStoryByIDCommandHandlerTests
     public async void GetStoryByID_ValidID_ReturnsStory()
     {
         //Arrange
-        var logger = Substitute.For<ILogger<GetStoryByIDCommandHandler>>(); // new Mock<ILogger<GetStoryByIDCommandHandler>>();
-        var dataSource = Substitute.For<IStoriesDataSource>(); // new Mock<IStoriesDataSource>();
+        var logger = Substitute.For<ILogger<GetStoryByIDCommandHandler>>();
+        var dataSource = Substitute.For<IStoriesDataSource>();
         var story = new Story() { ID = "ID" };
-        //dataSource.Setup(d => d.GetStoryAsync(story.ID, It.IsAny<CancellationToken>())).ReturnsAsync(story);
 
         dataSource.GetStoryAsync(story.ID, Arg.Any<CancellationToken>()).Returns(story);
 
