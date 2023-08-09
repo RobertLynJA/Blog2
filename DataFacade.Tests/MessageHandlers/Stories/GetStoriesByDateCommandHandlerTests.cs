@@ -12,14 +12,13 @@ public class GetStoriesByDateCommandHandlerTests
     public async void GetStoriesByDate_ValidRange_ReturnsList()
     {
         //Arrange
-        var logger = new Mock<ILogger<GetStoriesByDateCommandHandler>>();
-        var dataSource = new Mock<IStoriesDataSource>();
+        var logger = Substitute.For<ILogger<GetStoriesByDateCommandHandler>>(); 
+        var dataSource = Substitute.For<IStoriesDataSource>(); 
         var stories = new List<Story>();
-        dataSource.Setup(d => d.GetStoriesByDateAsync(0, 10, new CancellationToken()))
-            .ReturnsAsync(stories);
+        dataSource.GetStoriesByDateAsync(0, 10, Arg.Any<CancellationToken>()).Returns(stories);
 
         var command = new GetStoriesByDateCommand(0, 10);
-        var handler = new GetStoriesByDateCommandHandler(logger.Object, dataSource.Object);
+        var handler = new GetStoriesByDateCommandHandler(logger, dataSource);
 
         //Act
         var result = await handler.Handle(command, new CancellationToken());
