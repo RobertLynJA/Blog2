@@ -15,6 +15,7 @@ env:
   AZURE_WEBAPP_PACKAGE_PATH: './'         
   WEB_WORKING_DIRECTORY: './web'
   AZURE_API_WEBAPP_NAME: 'RobertLynJAApi'
+  DEPLOY: ${{ github.event_name == 'push' }}
 
 jobs:
 
@@ -44,7 +45,7 @@ jobs:
       - name: Build and push container image to registry
         uses: docker/build-push-action@v4
         with:
-          push: true
+          push: ${{ env.DEPLOY }}
           tags: ghcr.io/${{ env.REPO }}-web:${{ github.sha }}
           file: ./web/Dockerfile
           
@@ -95,7 +96,7 @@ jobs:
       - name: Build and push container image to registry
         uses: docker/build-push-action@v4
         with:
-          push: true
+          push: ${{ env.DEPLOY }}
           tags: ghcr.io/${{ env.REPO }}-api:${{ github.sha }}
           file: ./API/Dockerfile
 
