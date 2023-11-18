@@ -3,7 +3,7 @@ name: Clean Packages
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 23 * * *" 
+    - cron: "0 0 * * 1"  # Runs "At 00:00 on Monday." (see https://crontab.guru)
 
 jobs:
   clean-packages:
