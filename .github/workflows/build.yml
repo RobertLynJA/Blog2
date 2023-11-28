@@ -9,6 +9,8 @@ on:
   pull_request:
     branches:
       - "main"
+  schedule:
+    - cron: "0 4 * * 1" 
   
 env:
   AZURE_NEXTJS_WEBAPP_NAME: 'RobertLynJANext'   
