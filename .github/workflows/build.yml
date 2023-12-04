@@ -10,7 +10,7 @@ on:
     branches:
       - "main"
   schedule:
-    - cron: "0 4 * * 1" 
+    - cron: "0 4 * * 0" 
   
 env:
   AZURE_NEXTJS_WEBAPP_NAME: 'RobertLynJANext'   
@@ -53,7 +53,7 @@ jobs:
           
   deploy-web:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' }}
+    if: ${{ github.event_name == 'push' || github.event_name == 'schedule' }}
     needs: [build-web, build-api]
 
     environment:
@@ -104,7 +104,7 @@ jobs:
 
   deploy-api:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' }}
+    if: ${{ github.event_name == 'push' || github.event_name == 'schedule' }}
     needs: [build-web, build-api]
 
     environment:
