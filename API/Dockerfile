@@ -15,7 +15,13 @@ COPY . .
 WORKDIR "/src/API"
 RUN dotnet build "API.csproj" -c Release -o /app/build
 
+#FROM build AS test
+WORKDIR "/src"
+RUN dotnet test API.Tests -c Release
+RUN dotnet test DataFacade.Tests
+
 FROM build AS publish
+WORKDIR "/src/API"
 RUN dotnet publish "API.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
