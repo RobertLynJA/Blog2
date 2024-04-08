@@ -66,7 +66,7 @@ jobs:
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
-        uses: azure/webapps-deploy@145a0687697df1d8a28909569f6e5d86213041f9
+        uses: azure/webapps-deploy@de617f46172a906d0617bb0e50d81e9e3aec24c8
         with:
           app-name: ${{ env.AZURE_NEXTJS_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_NEXTJS_PUBLISH_PROFILE_D }}
@@ -117,7 +117,7 @@ jobs:
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
-        uses: azure/webapps-deploy@145a0687697df1d8a28909569f6e5d86213041f9
+        uses: azure/webapps-deploy@de617f46172a906d0617bb0e50d81e9e3aec24c8
         with:
           app-name: ${{ env.AZURE_API_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_API_PUBLISH_PROFILE_D }}
