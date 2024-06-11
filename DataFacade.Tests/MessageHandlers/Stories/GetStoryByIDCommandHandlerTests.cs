@@ -10,7 +10,7 @@ namespace DataFacade.Tests.MessageHandlers.Stories;
 public class GetStoryByIDCommandHandlerTests
 {
     [Fact]
-    public async void GetStoryByID_InvalidID_ReturnsNull()
+    public async Task GetStoryByID_InvalidID_ReturnsNull()
     {
         //Arrange
         var logger = Substitute.For<ILogger<GetStoryByIDCommandHandler>>();
@@ -27,7 +27,7 @@ public class GetStoryByIDCommandHandlerTests
     }
 
     [Fact]
-    public async void GetStoryByID_ValidID_ReturnsStory()
+    public async Task GetStoryByID_ValidID_ReturnsStory()
     {
         //Arrange
         var logger = Substitute.For<ILogger<GetStoryByIDCommandHandler>>();
