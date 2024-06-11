@@ -9,19 +9,8 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StoriesController : ControllerBase
+    public class StoriesController(ILogger<StoriesController> _logger, IMapper _mapper, IMediator _mediator) : ControllerBase
     {
-        private readonly ILogger<StoriesController> _logger;
-        private readonly IMapper _mapper;
-        private readonly IMediator _mediator;
-
-        public StoriesController(ILogger<StoriesController> logger, IMapper mapper, IMediator mediator)
-        {
-            _logger = logger;
-            _mapper = mapper;
-            _mediator = mediator;
-        }
-
         // GET <StoriesController>
         [HttpGet()]
         [ProducesResponseType(typeof(Models.Stories.Story), StatusCodes.Status200OK)]
@@ -37,7 +26,7 @@ namespace API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, Request.GetDisplayUrl());
+                _logger.LogError(ex, "{url}", Request.GetDisplayUrl());
                 throw;
             }
         }
@@ -55,7 +44,7 @@ namespace API.Controllers
                     return NotFound();
                 }
 
-                var story = await _mediator.Send(new GetStoryByIDCommand(id));
+                var story = await _mediator.Send(new GetStoryByIDCommand(id), cancellationToken);
 
                 if (story == null)
                 {
@@ -68,7 +57,7 @@ namespace API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, Request.GetDisplayUrl());
+                _logger.LogError(ex, "{url}", Request.GetDisplayUrl());
                 throw;
             }
         }
