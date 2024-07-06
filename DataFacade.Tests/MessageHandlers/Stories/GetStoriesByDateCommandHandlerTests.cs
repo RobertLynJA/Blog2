@@ -9,7 +9,7 @@ namespace DataFacade.Tests.MessageHandlers.Stories;
 public class GetStoriesByDateCommandHandlerTests
 {
     [Fact]
-    public async void GetStoriesByDate_ValidRange_ReturnsList()
+    public async Task GetStoriesByDate_ValidRange_ReturnsList()
     {
         //Arrange
         var logger = Substitute.For<ILogger<GetStoriesByDateCommandHandler>>(); 
