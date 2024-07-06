@@ -8,14 +8,9 @@ namespace API.Controllers;
 
 [Route("/")]
 [ApiController]
-public class SiteController : ControllerBase
+public class SiteController(ILogger<SiteController> logger) : ControllerBase
 {
-    private readonly ILogger<SiteController> _logger;
-
-    public SiteController(ILogger<SiteController> logger)
-    {
-        _logger = logger;
-    }
+    private readonly ILogger<SiteController> _logger = logger;
 
     [HttpGet]
     public string GetHelloMessage()
