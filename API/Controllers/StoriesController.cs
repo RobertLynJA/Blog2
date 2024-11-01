@@ -17,14 +17,13 @@ namespace API.Controllers
 
         // GET <StoriesController>
         [HttpGet()]
-        [ProducesResponseType(typeof(Models.Stories.Story), StatusCodes.Status200OK)]
         [ResponseCache(CacheProfileName = "10MinutesPublic")]
-        public async Task<IActionResult> Get(CancellationToken cancellationToken)
+        public async Task<ActionResult<List<Models.Stories.Story>>> Get(CancellationToken cancellationToken)
         {
             try
             {
                 var stories = await _mediator.Send(new GetStoriesByDateCommand(0, 10), cancellationToken);
-                var result = _mapper.Map<IEnumerable<Models.Stories.Story>>(stories);
+                var result = _mapper.Map<IEnumerable<Models.Stories.Story>>(stories).ToList();
 
                 return Ok(result);
             }
@@ -37,10 +36,9 @@ namespace API.Controllers
 
         // GET <StoriesController>/5
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(Models.Stories.Story), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ResponseCache(CacheProfileName = "10MinutesPublic")]
-        public async Task<IActionResult> Get(string id, CancellationToken cancellationToken)
+        public async Task<ActionResult<Models.Stories.Story>> Get(string id, CancellationToken cancellationToken)
         {
             try
             {
