@@ -39,4 +39,15 @@ public class Story
         get => _encoding;
         set => _encoding = value ?? throw new ArgumentNullException(nameof(Encoding));
     }
+
+    static public Story FromDAO(DataFacade.Models.Stories.Story story)
+    {
+        return new Story
+        {
+            ID = story.ID,
+            Title = story.Title,
+            Content = story.Content,
+            PublishedDate = story.PublishedDate
+        };
+    }
 }

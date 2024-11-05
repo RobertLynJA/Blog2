@@ -1,7 +1,7 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -15,6 +15,7 @@ public class SiteController(ILogger<SiteController> logger) : ControllerBase
     [HttpGet]
     public string GetHelloMessage()
     {
+        _logger.LogInformation("URL: {URL}", Request.GetDisplayUrl());
         return "Hello, I'm working :)";
     }
 
@@ -23,6 +24,7 @@ public class SiteController(ILogger<SiteController> logger) : ControllerBase
     [HttpGet]
     public string TestAdmin()
     {
+        _logger.LogInformation("URL: {URL}", Request.GetDisplayUrl());
         return "Authorized Admin";
     }
 
@@ -31,6 +33,7 @@ public class SiteController(ILogger<SiteController> logger) : ControllerBase
     [HttpGet]
     public string TestUser()
     {
+        _logger.LogInformation("URL: {URL}", Request.GetDisplayUrl());
         return "Authorized User";
     }
 }
