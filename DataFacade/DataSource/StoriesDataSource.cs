@@ -43,7 +43,7 @@ public class StoriesDataSource : IStoriesDataSource
 
         using var feed = matches.ToFeedIterator<Story>();
 
-        List<Story> stories = new();
+        List<Story> stories = [];
 
         while(feed.HasMoreResults)
         {
@@ -60,10 +60,7 @@ public class StoriesDataSource : IStoriesDataSource
 
     public async Task<Story?> GetStoryAsync(string storyId, CancellationToken cancellationToken = default)
     {
-        if (storyId == null)
-        {
-            throw new ArgumentNullException(nameof(storyId));
-        }
+        ArgumentNullException.ThrowIfNull(storyId, nameof(storyId));
 
         var queryable = _db.StoriesContainer.GetItemLinqQueryable<Story>();
 
@@ -72,7 +69,7 @@ public class StoriesDataSource : IStoriesDataSource
 
         using var feed = matches.ToFeedIterator<Story>();
 
-        List<Story> stories = new();
+        List<Story> stories = [];
 
         while (feed.HasMoreResults)
         {
