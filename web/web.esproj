@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.62-alpha">
+﻿<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/1.0.3804879">
   <PropertyGroup>
     <StartupCommand>set BROWSER=none&amp;&amp;npm run dev</StartupCommand>
     <JavaScriptTestRoot>__tests__\</JavaScriptTestRoot>
