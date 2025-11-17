@@ -14,14 +14,14 @@ public class GetStoriesByDateCommandHandlerTests
         //Arrange
         var logger = Substitute.For<ILogger<GetStoriesByDateCommandHandler>>(); 
         var dataSource = Substitute.For<IStoriesDataSource>(); 
-        var stories = new List<Story>();
+        var stories = new List<Story>() { new() };
         dataSource.GetStoriesByDateAsync(0, 10, Arg.Any<CancellationToken>()).Returns(stories);
 
         var command = new GetStoriesByDateCommand(0, 10);
         var handler = new GetStoriesByDateCommandHandler(logger, dataSource);
 
         //Act
-        var result = await handler.Handle(command, new CancellationToken());
+        var result = await handler.Handle(command, CancellationToken.None);
 
         //Assert
         Assert.Equal(stories, result);
