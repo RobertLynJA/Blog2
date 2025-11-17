@@ -1,6 +1,4 @@
 ﻿using DataFacade.Models.Stories;
-using MediatR;
-using Microsoft.Azure.Cosmos.Serialization.HybridRow.Schemas;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace DataFacade.Commands.Stories;
 
-public class GetStoryByIDCommand : IRequest<Story?>
+public class GetStoryByIdCommand
 {
-    public string StoryID { get; }
+    public string StoryId { get; }
     
-    public GetStoryByIDCommand(string storyID)
+    public GetStoryByIdCommand(string storyId)
     {
-        StoryID = storyID ?? throw new ArgumentNullException(storyID);
+        StoryId = storyId ?? throw new ArgumentNullException(storyId);
     }
 }

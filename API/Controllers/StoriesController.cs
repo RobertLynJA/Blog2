@@ -1,6 +1,6 @@
 ﻿using API.Models.Stories;
 using DataFacade.Commands.Stories;
-using MediatR;
+using Wolverine;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
@@ -9,10 +9,10 @@ namespace API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class StoriesController(ILogger<StoriesController> logger, IMediator mediator) : ControllerBase
+public class StoriesController(ILogger<StoriesController> logger, IMessageBus bus) : ControllerBase
 {
     private readonly ILogger<StoriesController> _logger = logger;
-    private readonly IMediator _mediator = mediator;
+    private readonly IMessageBus _bus = bus;
 
     // GET <StoriesController>
     [HttpGet()]
@@ -21,8 +21,8 @@ public class StoriesController(ILogger<StoriesController> logger, IMediator medi
     {
         try
         {
-            var stories = await _mediator.Send(new GetStoriesByDateCommand(0, 10), cancellationToken);
-            var result = stories.Select(s => Story.FromDAO(s)).ToList();
+            var stories = await _bus.InvokeAsync<IReadOnlyList<DataFacade.Models.Stories.Story>>(new GetStoriesByDateCommand(0, 10), cancellationToken);
+            var result = stories.Select(s => Story.FromDao(s)).ToList();
 
             _logger.LogInformation("URL: {URL}", Request.GetDisplayUrl());
 
@@ -48,14 +48,14 @@ public class StoriesController(ILogger<StoriesController> logger, IMediator medi
                 return NotFound();
             }
 
-            var story = await _mediator.Send(new GetStoryByIDCommand(id), cancellationToken);
+            var story = await _bus.InvokeAsync<DataFacade.Models.Stories.Story?>(new GetStoryByIdCommand(id), cancellationToken);
 
             if (story == null)
             {
                 return NotFound();
             }
 
-            var result = Story.FromDAO(story);
+            var result = Story.FromDao(story);
 
             _logger.LogInformation("URL: {URL}", Request.GetDisplayUrl());
 

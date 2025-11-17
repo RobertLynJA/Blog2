@@ -1,7 +1,7 @@
 ﻿using API.Controllers;
 using API.Models.Stories;
 using API.Tests.TestExtensions;
-using MediatR;
+using Wolverine;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -10,9 +10,9 @@ namespace Api.Tests.Controllers;
 
 public class StoriesControllerTests
 {
-    private static StoriesController CreateController(IMediator mediator, ILogger<StoriesController> logger)
+    private static StoriesController CreateController(IMessageBus bus, ILogger<StoriesController> logger)
     {
-        var controller = new StoriesController(logger, mediator)
+        var controller = new StoriesController(logger, bus)
         {
             ControllerContext = new ControllerContext
             {
@@ -33,19 +33,19 @@ public class StoriesControllerTests
     {
         // Arrange
         var logger = Substitute.For<ILogger<StoriesController>>();
-        var mediator = Substitute.For<IMediator>();
+        var bus = Substitute.For<IMessageBus>();
 
         var daoStories = new List<DataFacade.Models.Stories.Story>
         {
-            new() { ID = "1", Title = "Title 1", Content = "Content 1", PublishedDate = new DateTime(2024, 1, 2) },
-            new() { ID = "2", Title = "Title 2", Content = "Content 2", PublishedDate = new DateTime(2024, 3, 4) }
+            new() { Id = "1", Title = "Title 1", Content = "Content 1", PublishedDate = new DateTime(2024, 1, 2) },
+            new() { Id = "2", Title = "Title 2", Content = "Content 2", PublishedDate = new DateTime(2024, 3, 4) }
         } as IReadOnlyList<DataFacade.Models.Stories.Story>;
 
-        mediator
-            .Send(Arg.Any<DataFacade.Commands.Stories.GetStoriesByDateCommand>(), Arg.Any<CancellationToken>())
+        bus
+            .InvokeAsync<IReadOnlyList<DataFacade.Models.Stories.Story>>(Arg.Any<DataFacade.Commands.Stories.GetStoriesByDateCommand>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(daoStories));
 
-        var controller = CreateController(mediator, logger);
+        var controller = CreateController(bus, logger);
 
         // Act
         var actionResult = await controller.Get(CancellationToken.None);
@@ -57,14 +57,14 @@ public class StoriesControllerTests
         Assert.Collection(resultList,
             s =>
             {
-                Assert.Equal("1", s.ID);
+                Assert.Equal("1", s.Id);
                 Assert.Equal("Title 1", s.Title);
                 Assert.Equal("Content 1", s.Content);
                 Assert.Equal(new DateTime(2024, 1, 2), s.PublishedDate);
             },
             s =>
             {
-                Assert.Equal("2", s.ID);
+                Assert.Equal("2", s.Id);
                 Assert.Equal("Title 2", s.Title);
                 Assert.Equal("Content 2", s.Content);
                 Assert.Equal(new DateTime(2024, 3, 4), s.PublishedDate);
@@ -81,8 +81,8 @@ public class StoriesControllerTests
     {
         // Arrange
         var logger = Substitute.For<ILogger<StoriesController>>();
-        var mediator = Substitute.For<IMediator>();
-        var controller = CreateController(mediator, logger);
+        var bus = Substitute.For<IMessageBus>();
+        var controller = CreateController(bus, logger);
 
         // Act
         var actionResult = await controller.Get(id!, CancellationToken.None);
@@ -96,13 +96,13 @@ public class StoriesControllerTests
     {
         // Arrange
         var logger = Substitute.For<ILogger<StoriesController>>();
-        var mediator = Substitute.For<IMediator>();
+        var bus = Substitute.For<IMessageBus>();
 
-        mediator
-            .Send(Arg.Any<DataFacade.Commands.Stories.GetStoryByIDCommand>(), Arg.Any<CancellationToken>())
+        bus
+            .InvokeAsync<DataFacade.Models.Stories.Story?>(Arg.Any<DataFacade.Commands.Stories.GetStoryByIdCommand>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<DataFacade.Models.Stories.Story?>(null));
 
-        var controller = CreateController(mediator, logger);
+        var controller = CreateController(bus, logger);
 
         // Act
         var actionResult = await controller.Get("abc", CancellationToken.None);
@@ -116,21 +116,21 @@ public class StoriesControllerTests
     {
         // Arrange
         var logger = Substitute.For<ILogger<StoriesController>>();
-        var mediator = Substitute.For<IMediator>();
+        var bus = Substitute.For<IMessageBus>();
 
         var dao = new DataFacade.Models.Stories.Story
         {
-            ID = "xyz",
+            Id = "xyz",
             Title = "My Title",
             Content = "My Content",
             PublishedDate = new DateTime(2023, 5, 6)
         };
 
-        mediator
-            .Send(Arg.Any<DataFacade.Commands.Stories.GetStoryByIDCommand>(), Arg.Any<CancellationToken>())
+        bus
+            .InvokeAsync<DataFacade.Models.Stories.Story?>(Arg.Any<DataFacade.Commands.Stories.GetStoryByIdCommand>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<DataFacade.Models.Stories.Story?>(dao));
 
-        var controller = CreateController(mediator, logger);
+        var controller = CreateController(bus, logger);
 
         // Act
         var actionResult = await controller.Get("xyz", CancellationToken.None);
@@ -138,7 +138,7 @@ public class StoriesControllerTests
         // Assert
         var ok = Assert.IsType<OkObjectResult>(actionResult.Result);
         var story = Assert.IsType<Story>(ok.Value);
-        Assert.Equal("xyz", story.ID);
+        Assert.Equal("xyz", story.Id);
         Assert.Equal("My Title", story.Title);
         Assert.Equal("My Content", story.Content);
         Assert.Equal(new DateTime(2023, 5, 6), story.PublishedDate);

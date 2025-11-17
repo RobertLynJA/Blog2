@@ -7,20 +7,18 @@ using Microsoft.Extensions.Logging;
 
 namespace DataFacade.Tests.MessageHandlers.Stories;
 
-public class GetStoryByIDCommandHandlerTests
+public class GetStoryByIdCommandHandlerTests
 {
     [Fact]
     public async Task GetStoryByID_InvalidID_ReturnsNull()
     {
         //Arrange
-        var logger = Substitute.For<ILogger<GetStoryByIDCommandHandler>>();
         var dataSource = Substitute.For<IStoriesDataSource>();
 
-        var command = new GetStoryByIDCommand("invalidID");
-        var handler = new GetStoryByIDCommandHandler(logger, dataSource);
+        var command = new GetStoryByIdCommand("invalidID");
 
         //Act
-        var result = await handler.Handle(command, new CancellationToken());
+        var result = await GetStoryByIdCommandHandler.Handle(command, dataSource, CancellationToken.None);
 
         //Assert
         Assert.Null(result);
@@ -30,17 +28,15 @@ public class GetStoryByIDCommandHandlerTests
     public async Task GetStoryByID_ValidID_ReturnsStory()
     {
         //Arrange
-        var logger = Substitute.For<ILogger<GetStoryByIDCommandHandler>>();
         var dataSource = Substitute.For<IStoriesDataSource>();
-        var story = new Story() { ID = "ID" };
+        var story = new Story() { Id = "ID" };
 
-        dataSource.GetStoryAsync(story.ID, Arg.Any<CancellationToken>()).Returns(story);
+        dataSource.GetStoryAsync(story.Id, Arg.Any<CancellationToken>()).Returns(story);
 
-        var command = new GetStoryByIDCommand(story.ID);
-        var handler = new GetStoryByIDCommandHandler(logger, dataSource);
+        var command = new GetStoryByIdCommand(story.Id);
 
         //Act
-        var result = await handler.Handle(command, new CancellationToken());
+        var result = await GetStoryByIdCommandHandler.Handle(command, dataSource, CancellationToken.None);
 
         //Assert
         Assert.Equal(story, result);

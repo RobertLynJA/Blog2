@@ -65,7 +65,7 @@ public class StoriesDataSource : IStoriesDataSource
         var queryable = _db.StoriesContainer.GetItemLinqQueryable<Story>();
 
         var matches = queryable
-            .Where(s => s.ID == storyId);
+            .Where(s => s.Id == storyId);
 
         using var feed = matches.ToFeedIterator<Story>();
 
