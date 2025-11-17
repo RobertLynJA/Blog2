@@ -100,8 +100,7 @@ public class Program
         builder.Host.UseWolverine(opts =>
         {
             opts.Durability.Mode = DurabilityMode.MediatorOnly;
-            
-            opts.ApplicationAssembly = Assembly.Load(nameof(DataFacade));
+            opts.Discovery.IncludeAssembly(Assembly.Load(nameof(DataFacade)));
         }).StartAsync();
 
         builder.Services.Configure<Data.Configuration.ConnectionStringsOptions>(
