@@ -11,10 +11,10 @@ public class Story
 {
     private string _id = string.Empty;
     [JsonRequired]
-    public string ID
+    public string Id
     {
         get => _id;
-        set => _id = value ?? throw new ArgumentNullException(nameof(ID));
+        set => _id = value ?? throw new ArgumentNullException(nameof(Id));
     }
 
     private string _title = string.Empty;

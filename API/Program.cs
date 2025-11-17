@@ -7,7 +7,8 @@ using RestSharp;
 using System.Configuration;
 using System.Reflection;
 using System.Security.Claims;
-using MediatR;
+using DataFacade.CommandHandlers.Stories;
+using Wolverine;
 
 namespace API;
 
@@ -95,9 +96,13 @@ public class Program
 
         builder.Services.AddOutputCache();
         builder.Services.AddSingleton<RestClient>();
-        builder.Services.AddMediatR(cfg => {
-            cfg.RegisterServicesFromAssemblies(Assembly.Load(nameof(DataFacade)));
-        });
+
+        builder.Host.UseWolverine(opts =>
+        {
+            opts.Durability.Mode = DurabilityMode.MediatorOnly;
+            
+            opts.ApplicationAssembly = Assembly.Load(nameof(DataFacade));
+        }).StartAsync();
 
         builder.Services.Configure<Data.Configuration.ConnectionStringsOptions>(
             builder.Configuration.GetSection(Data.Configuration.ConnectionStringsOptions.Position));

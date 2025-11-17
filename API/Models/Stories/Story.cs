@@ -3,10 +3,10 @@
 public class Story
 {
     private string _id = string.Empty;
-    public string ID
+    public string Id
     {
         get => _id;
-        set => _id = value ?? throw new ArgumentNullException(nameof(ID));
+        set => _id = value ?? throw new ArgumentNullException(nameof(Id));
     }
 
     private string _title = string.Empty;
@@ -40,11 +40,11 @@ public class Story
         set => _encoding = value ?? throw new ArgumentNullException(nameof(Encoding));
     }
 
-    static public Story FromDAO(DataFacade.Models.Stories.Story story)
+    public static Story FromDao(DataFacade.Models.Stories.Story story)
     {
         return new Story
         {
-            ID = story.ID,
+            Id = story.Id,
             Title = story.Title,
             Content = story.Content,
             PublishedDate = story.PublishedDate

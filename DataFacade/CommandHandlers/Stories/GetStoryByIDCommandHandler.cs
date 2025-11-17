@@ -2,7 +2,7 @@
 using DataFacade.DataSource;
 using DataFacade.Commands.Stories;
 using DataFacade.Models.Stories;
-using MediatR;
+using System.Threading;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -12,19 +12,11 @@ using System.Threading.Tasks;
 
 namespace DataFacade.CommandHandlers.Stories;
 
-public class GetStoryByIDCommandHandler : IRequestHandler<GetStoryByIDCommand, Story?>
+public static class GetStoryByIdCommandHandler
 {
-    private readonly ILogger<GetStoryByIDCommandHandler> _logger;
-    private readonly IStoriesDataSource _dataSource;
-
-    public GetStoryByIDCommandHandler(ILogger<GetStoryByIDCommandHandler> logger, IStoriesDataSource dataSource)
+    public static async Task<Story?> Handle(GetStoryByIdCommand request, IStoriesDataSource dataSource,
+        CancellationToken cancellationToken)
     {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _dataSource = dataSource ?? throw new ArgumentNullException(nameof(dataSource));
-    }
-
-    public async Task<Story?> Handle(GetStoryByIDCommand request, CancellationToken cancellationToken)
-    {
-        return await _dataSource.GetStoryAsync(request.StoryID, cancellationToken);
+        return await dataSource.GetStoryAsync(request.StoryId, cancellationToken);
     }
 }
