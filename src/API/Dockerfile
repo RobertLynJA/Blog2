@@ -6,12 +6,12 @@ EXPOSE 8080
 
 FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
 WORKDIR /src
-COPY ["API/API.csproj", "API/"]
-COPY ["API.Tests/API.Tests.csproj", "API.Tests/"]
-COPY ["DataFacade/DataFacade.csproj", "DataFacade/"]
-COPY ["DataFacade.Tests/DataFacade.Tests.csproj", "DataFacade.Tests/"]
+COPY ["src/API/API.csproj", "API/"]
+COPY ["src/API.Tests/API.Tests.csproj", "API.Tests/"]
+COPY ["src/DataFacade/DataFacade.csproj", "DataFacade/"]
+COPY ["src/DataFacade.Tests/DataFacade.Tests.csproj", "DataFacade.Tests/"]
 RUN dotnet restore "API/API.csproj"
-COPY . .
+COPY src/. .
 WORKDIR "/src/API"
 RUN dotnet build "API.csproj" -c Release -o /app/build
 
