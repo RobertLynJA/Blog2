@@ -32,14 +32,14 @@ public class StoriesDataSource : IStoriesDataSource
         throw new NotImplementedException();
     }
 
-    public async Task<IReadOnlyList<Story>> GetStoriesByDateAsync(int page, int numberRows, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<Story>> GetStoriesByDateAsync(int page, int pageSize, CancellationToken cancellationToken = default)
     {
         var queryable = _db.StoriesContainer.GetItemLinqQueryable<Story>();
 
         var matches = queryable
             .OrderByDescending(s => s.PublishedDate)
-            .Skip(page * numberRows)
-            .Take(numberRows);
+            .Skip(page * pageSize)
+            .Take(pageSize);
 
         using var feed = matches.ToFeedIterator<Story>();
 
@@ -68,8 +68,6 @@ public class StoriesDataSource : IStoriesDataSource
             .Where(s => s.Id == storyId);
 
         using var feed = matches.ToFeedIterator<Story>();
-
-        List<Story> stories = [];
 
         while (feed.HasMoreResults)
         {

@@ -17,11 +17,11 @@ public class StoriesController(ILogger<StoriesController> logger, IMessageBus bu
     // GET <StoriesController>
     [HttpGet()]
     [ResponseCache(CacheProfileName = "10MinutesPublic")]
-    public async Task<ActionResult<List<Models.Stories.Story>>> Get(CancellationToken cancellationToken)
+    public async Task<ActionResult<List<Models.Stories.Story>>> Get(int page = 0, int pageSize = 20, CancellationToken cancellationToken = default)
     {
         try
         {
-            var stories = await _bus.InvokeAsync<IReadOnlyList<DataFacade.Models.Stories.Story>>(new GetStoriesByDateCommand(0, 10), cancellationToken);
+            var stories = await _bus.InvokeAsync<IReadOnlyList<DataFacade.Models.Stories.Story>>(new GetStoriesByDateCommand(page, pageSize), cancellationToken);
             var result = stories.Select(s => Story.FromDao(s)).ToList();
 
             _logger.LogInformation("URL: {URL}", Request.GetDisplayUrl());
