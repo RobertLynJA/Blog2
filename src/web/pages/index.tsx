@@ -14,7 +14,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 ) => {
   return {
     props: {
-      stories: await getStoriesByDate(0, 20),
+      stories: await getStoriesByDate(20, 0),
       error: null,
     },
   };

@@ -10,11 +10,11 @@ namespace DataFacade.Commands.Stories;
 public class GetStoriesByDateCommand
 {
     public int Page { get; }
-    public int NumberRows { get; }
+    public int PageSize { get; }
 
-    public GetStoriesByDateCommand(int page, int numberRows) 
+    public GetStoriesByDateCommand(int page, int pageSize) 
     { 
         Page = page;
-        NumberRows = numberRows;
+        PageSize = pageSize;
     }
 }
