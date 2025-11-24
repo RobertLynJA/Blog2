@@ -48,7 +48,7 @@ public class StoriesControllerTests
         var controller = CreateController(bus, logger);
 
         // Act
-        var actionResult = await controller.Get(CancellationToken.None);
+        var actionResult = await controller.Get(0, 10, CancellationToken.None);
 
         // Assert
         var ok = Assert.IsType<OkObjectResult>(actionResult.Result);

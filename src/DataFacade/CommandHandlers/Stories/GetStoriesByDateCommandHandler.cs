@@ -17,6 +17,6 @@ public static class GetStoriesByDateCommandHandler
 {
     public static async Task<IReadOnlyList<Story>> Handle(GetStoriesByDateCommand request, IStoriesDataSource dataSource, CancellationToken cancellationToken)
     {
-        return await dataSource.GetStoriesByDateAsync(request.Page, request.NumberRows, cancellationToken);
+        return await dataSource.GetStoriesByDateAsync(request.Page, request.PageSize, cancellationToken);
     }
 }

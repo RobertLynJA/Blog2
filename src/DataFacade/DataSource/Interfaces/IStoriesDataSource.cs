@@ -10,7 +10,7 @@ namespace DataFacade.DataSource.Interfaces;
 
 public interface IStoriesDataSource
 {
-    Task<IReadOnlyList<Story>> GetStoriesByDateAsync(int page, int numberRows, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Story>> GetStoriesByDateAsync(int page, int pageSize, CancellationToken cancellationToken);
     Task<IReadOnlyList<Story>> GetStoriesAsync(int year, int month);
     Task<Story?> GetStoryAsync(string storyId, CancellationToken cancellationToken);
     Task<IReadOnlyList<int>> GetStoryYearsAsync();
