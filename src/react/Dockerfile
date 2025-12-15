@@ -17,7 +17,7 @@ RUN npm run build
 
 
 # 2) Runtime: NGINX to serve static files
-FROM nginx:1.27-alpine AS runtime
+FROM nginx:1.29-alpine AS runtime
 
 # Copy built assets from builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html
