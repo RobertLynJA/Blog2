@@ -6,23 +6,23 @@
 version: 2
 updates:
   - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/react/" # Location of package manifests
+    directory: "/src/react/" # Location of package manifests
     schedule:
       interval: "monthly"
   - package-ecosystem: "nuget" # See documentation for possible values
-    directory: "/API/" # Location of package manifests
+    directory: "/src/API/" # Location of package manifests
     schedule:
       interval: "monthly"
   - package-ecosystem: "nuget" # See documentation for possible values
-    directory: "/API.Tests/" # Location of package manifests
+    directory: "/src/API.Tests/" # Location of package manifests
     schedule:
       interval: "monthly"
   - package-ecosystem: "nuget" # See documentation for possible values
-    directory: "/DataFacade/" # Location of package manifests
+    directory: "/src/DataFacade/" # Location of package manifests
     schedule:
       interval: "monthly"      
   - package-ecosystem: "nuget" # See documentation for possible values
-    directory: "/DataFacade.Tests/" # Location of package manifests
+    directory: "/src/DataFacade.Tests/" # Location of package manifests
     schedule:
       interval: "monthly"      
   - package-ecosystem: "github-actions" # See documentation for possible values
@@ -30,11 +30,11 @@ updates:
     schedule:
       interval: "monthly"
   - package-ecosystem: "docker"
-    directory: "/API/"        # Dockerfile(s) in API folder
+    directory: "/src/API/"        # Dockerfile(s) in API folder
     schedule:
       interval: "monthly"
   - package-ecosystem: "docker"
-    directory: "/react/"      # Dockerfile(s) in react folder (if present)
+    directory: "/src/react/"      # Dockerfile(s) in react folder (if present)
     schedule:
       interval: "monthly"
       
