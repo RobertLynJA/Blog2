@@ -8,7 +8,7 @@ Just a project to implement a blogging platform for personal use.
 - [.Net](https://dotnet.microsoft.com)
   - [ASP.Net Web API](https://dotnet.microsoft.com/en-us/apps/aspnet/apis)
   - [xUnit](https://xunit.net)
-- [Next.js](https://nextjs.org)
+- [Reach](https://react.dev/)
   - [Tailwind CSS](https://tailwindcss.com)
   - [Jest](https://jestjs.io)
 - [Azure Cosmos DB](https://azure.microsoft.com/en-us/products/cosmos-db/)
