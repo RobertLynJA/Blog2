@@ -6,13 +6,13 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Copy lockfile(s) and package.json for better layer caching
-COPY src/web/package.json src/web/package-lock.json* ./
+COPY src/react/package.json src/react/package-lock.json* ./
 
 # Install dependencies
 RUN npm ci
 
 # Copy application source and build
-COPY src/web .
+COPY src/react .
 RUN npm run build
 
 
@@ -27,5 +27,7 @@ EXPOSE 80
 
 # Use default NGINX configuration which serves from /usr/share/nginx/html
 # If you need SPA fallback or custom headers, add an nginx.conf and COPY it to /etc/nginx/conf.d/default.conf
+
+COPY src/react/nginx.conf /etc/nginx/conf.d/default.conf
 
 CMD ["nginx", "-g", "daemon off;"]
