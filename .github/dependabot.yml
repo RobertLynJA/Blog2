@@ -28,4 +28,13 @@ updates:
   - package-ecosystem: "github-actions" # See documentation for possible values
     directory: "/" # Location of package manifests
     schedule:
-      interval: "monthly"      
+      interval: "monthly"
+  - package-ecosystem: "docker"
+    directory: "/API/"        # Dockerfile(s) in API folder
+    schedule:
+      interval: "monthly"
+  - package-ecosystem: "docker"
+    directory: "/react/"      # Dockerfile(s) in react folder (if present)
+    schedule:
+      interval: "monthly"
+      
