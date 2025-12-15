@@ -6,7 +6,7 @@
 version: 2
 updates:
   - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/web/" # Location of package manifests
+    directory: "/react/" # Location of package manifests
     schedule:
       interval: "monthly"
   - package-ecosystem: "nuget" # See documentation for possible values
