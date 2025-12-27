@@ -9,7 +9,7 @@ jobs:
   clean-logs:
     runs-on: ubuntu-latest
     steps:
-      - uses: igorjs/gh-actions-clean-workflow@v6
+      - uses: igorjs/gh-actions-clean-workflow@v7
         with:
           runs_older_than: "14" # optional, default value: "7"
           token: ${{ github.token }}
