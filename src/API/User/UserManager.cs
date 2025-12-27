@@ -3,7 +3,6 @@ using API.Data.Auth0;
 using API.Data.Configuration;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
 using RestSharp;
 using System.Configuration;
 using System.Net;
