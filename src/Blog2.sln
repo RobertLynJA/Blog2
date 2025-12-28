@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataFacade.Tests", "DataFac
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "react", "react\react.esproj", "{287770C9-6AFD-4A45-A02B-C5122EB1FAF4}"
 EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "web", "web\web.esproj", "{51E02790-DE84-4651-93AE-7060F495911B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{287770C9-6AFD-4A45-A02B-C5122EB1FAF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{287770C9-6AFD-4A45-A02B-C5122EB1FAF4}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{287770C9-6AFD-4A45-A02B-C5122EB1FAF4}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{51E02790-DE84-4651-93AE-7060F495911B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51E02790-DE84-4651-93AE-7060F495911B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51E02790-DE84-4651-93AE-7060F495911B}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{51E02790-DE84-4651-93AE-7060F495911B}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
