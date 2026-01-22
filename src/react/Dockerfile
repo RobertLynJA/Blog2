@@ -1,8 +1,8 @@
-﻿
+
 ## Multi-stage Dockerfile to build a React app and serve the built /dist with NGINX
 
 # 1) Builder: install deps and build to /app/dist
-FROM node:24-alpine AS builder
+FROM node:25-alpine AS builder
 WORKDIR /app
 
 # Copy lockfile(s) and package.json for better layer caching
