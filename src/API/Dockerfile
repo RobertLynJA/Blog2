@@ -13,16 +13,16 @@ COPY ["src/DataFacade.Tests/DataFacade.Tests.csproj", "DataFacade.Tests/"]
 RUN dotnet restore "API/API.csproj"
 COPY src/. .
 WORKDIR "/src/API"
-RUN dotnet build "API.csproj" -c Release -o /app/build
+RUN dotnet build "API.csproj" -c Release 
 
 #FROM build AS test
 WORKDIR "/src"
-RUN dotnet test API.Tests -c Release
-RUN dotnet test DataFacade.Tests
+RUN dotnet test API.Tests --no-build -c Release
+RUN dotnet test DataFacade.Tests --no-build -c Release
 
 FROM build AS publish
 WORKDIR "/src/API"
-RUN dotnet publish "API.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "API.csproj" -c Release -o /app/publish --no-build /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
