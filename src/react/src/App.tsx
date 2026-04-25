@@ -23,7 +23,7 @@ function App() {
     return (
         <div className="min-h-screen bg-gray-50 p-8">
             <main className="max-w-4xl mx-auto">
-                <h1 className="text-3xl font-bold mb-8 text-gray-900">Latest Stories</h1>
+                <h1 className="text-3xl font-bold mb-8 text-gray-900">RobertLynJA.com</h1>
 
                 {loading ? (
                     <p className="text-gray-500 text-center">Loading stories...</p>
