@@ -1,10 +1,5 @@
 import { useState, useEffect } from 'react'
-
-interface Story {
-    id: string;
-    title: string;
-    summary: string;
-}
+import StoryCard, { type Story } from './components/stories/StoryCard'
 
 function App() {
     const [stories, setStories] = useState<Story[]>([]);
@@ -13,7 +8,7 @@ function App() {
     useEffect(() => {
         const apiRoot = import.meta.env.VITE_API_ROOT;
 
-        fetch(`${apiRoot}/api/stories`) // Adjust endpoint as needed
+        fetch(`${apiRoot}/api/stories`)
             .then(res => res.json())
             .then(data => {
                 setStories(data);
@@ -35,12 +30,7 @@ function App() {
                 ) : (
                     <div className="grid gap-6">
                         {stories?.map((story) => (
-                            <div key={story.id} className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                                <h2 className="text-xl font-semibold text-blue-600 hover:underline cursor-pointer">
-                                    {story.title}
-                                </h2>
-                                <p className="mt-2 text-gray-600">{story.summary}</p>
-                            </div>
+                            <StoryCard key={story.id} story={story} />
                         ))}
                     </div>
                 )}
