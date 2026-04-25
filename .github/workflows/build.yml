@@ -46,7 +46,7 @@ jobs:
         run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
 
       - name: Build and push container image to registry
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           push: ${{ env.DEPLOY }}
           tags: ghcr.io/${{ env.REPO }}-web:${{ github.sha }}
@@ -97,7 +97,7 @@ jobs:
         run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
 
       - name: Build and push container image to registry
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           push: ${{ env.DEPLOY }}
           tags: ghcr.io/${{ env.REPO }}-api:${{ github.sha }}
