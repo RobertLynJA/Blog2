@@ -36,7 +36,7 @@ function App() {
                 )}
             </main>
             <footer className="mt-12 text-center text-gray-400 text-sm">
-                &copy; {new Date().getFullYear()} My Blog
+                &copy; {new Date().getFullYear()} RobertLynJA.com
             </footer>
         </div>
     )
