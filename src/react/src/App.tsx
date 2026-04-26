@@ -1,44 +1,18 @@
-import { useState, useEffect } from 'react'
-import StoryCard, { type Story } from './components/stories/StoryCard'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Layout from './components/Layout'
+import HomePage from './pages/HomePage'
+import AboutPage from './pages/AboutPage'
 
 function App() {
-    const [stories, setStories] = useState<Story[]>([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const apiRoot = import.meta.env.VITE_API_ROOT;
-
-        fetch(`${apiRoot}/api/stories`)
-            .then(res => res.json())
-            .then(data => {
-                setStories(data);
-                setLoading(false);
-            })
-            .catch(err => {
-                console.error("Failed to fetch stories", err);
-                setLoading(false);
-            });
-    }, []);
-
     return (
-        <div className="min-h-screen bg-gray-50 p-8">
-            <main className="max-w-4xl mx-auto">
-                <h1 className="text-3xl font-bold mb-8 text-gray-900">RobertLynJA.com</h1>
-
-                {loading ? (
-                    <p className="text-gray-500 text-center">Loading stories...</p>
-                ) : (
-                    <div className="grid gap-6">
-                        {stories?.map((story) => (
-                            <StoryCard key={story.id} story={story} />
-                        ))}
-                    </div>
-                )}
-            </main>
-            <footer className="mt-12 text-center text-gray-400 text-sm">
-                &copy; {new Date().getFullYear()} RobertLynJA.com
-            </footer>
-        </div>
+        <BrowserRouter>
+            <Layout>
+                <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/about" element={<AboutPage />} />
+                </Routes>
+            </Layout>
+        </BrowserRouter>
     )
 }
 
